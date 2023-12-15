@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
+import Footer from '../../pages/Footer/Footer';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -40,7 +41,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
         <div className='bg-gray-100'>
            {children}
+            
+            <div>
+              <Footer />
+            </div>
         </div>
+        
        
     </>
     
