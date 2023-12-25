@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"; 
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 
 const DateRange:React.FC = () =>{
@@ -22,7 +22,7 @@ const DateRange:React.FC = () =>{
               selectsStart
               startDate={startDate}
               endDate={endDate}
-              placeholderText="Tanggal awal"
+              placeholderText="Tanggal Awal"
               className="p-2 pb-3 rounded border text-xs"
             />
             <DatePicker
@@ -32,7 +32,7 @@ const DateRange:React.FC = () =>{
               startDate={startDate}
               endDate={endDate}
               minDate={startDate}
-              placeholderText="Tanggal akhir"
+              placeholderText="Tanggal Akhir"
               className="p-2 pb-3 rounded border text-xs"
             />
           </div>

@@ -18,7 +18,9 @@ const TabelData: React.FC<TableDataProps> = ({ columns, data }) => {
                     {columns.map((column, index) => (
                       <th
                         key={index}
-                        className="px-4 py-5 bg-gray-300 text-center text-sm leading-4 font-medium tracking-wider"
+                        className={`px-4 py-5 bg-gray-300 ${
+                          index === 0 ? 'text-center' : ''
+                        } text-sm leading-4 font-medium tracking-wider`}
                       >
                         {column}
                       </th>
@@ -33,9 +35,14 @@ const TabelData: React.FC<TableDataProps> = ({ columns, data }) => {
                         className={`${rowIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'} border-b border-gray-200`}
                       >
                         {Object.entries(item).map(([key, value], colIndex) => (
-                          <td key={colIndex} className="px-4 py-4 whitespace-no-wrap">
+                          <td
+                            key={colIndex}
+                            className={`px-4 py-4 whitespace-no-wrap ${
+                              colIndex === 0 ? 'text-center' : ''
+                            }`}
+                          >
                             <div className="text-sm leading-5 font-medium text-gray-900">
-                              {key === 'col5' || key === 'col6'|| key === 'col7' && React.isValidElement(value) ? (
+                              {key === 'col5' || key === 'col6' || key === 'col7' && React.isValidElement(value) ? (
                                 value
                               ) : (
                                 String(value)

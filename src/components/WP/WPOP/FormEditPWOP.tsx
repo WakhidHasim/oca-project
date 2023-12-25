@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaEdit } from "react-icons/fa";
-import { TiCancel } from "react-icons/ti";
+import { IoArrowUndoSharp } from "react-icons/io5";
+import ButtonTabel from '../../Button/ButtonTabel';
 
 const FormEditPWOP: React.FC = () => {
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,15 +142,19 @@ const FormEditPWOP: React.FC = () => {
       </form>
       <div className='flex gap-5 justify-start pt-8 text-white '>
         <Link to="/dataWPOP">
-          <button className='bg-gray-400 p-2 rounded px-4 flex gap-1 text-sm'>
-          <TiCancel size={20} clasName="p-1 text-white  "/>
-          <span>Kembali</span>
-        </button>
+          <ButtonTabel 
+            text='Kembali' 
+            icon={<IoArrowUndoSharp size={16}/>} 
+            bgColor='bg-gray'
+          /> 
         </Link>
-        <button className='bg-orange p-2 rounded px-4 flex gap-1 text-sm'>
-          <FaEdit size={18} clasName="p-1" />
-          <span>Simpan</span>
-        </button>
+
+        <Link to="">
+        <ButtonTabel 
+          text='Edit' 
+          icon={<FaEdit size={16}/>} 
+          bgColor='bg-orange'/> 
+      </Link>
       </div>
     </div>
   );

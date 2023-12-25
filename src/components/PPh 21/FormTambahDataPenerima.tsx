@@ -1,90 +1,103 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { IoIosSave } from "react-icons/io";
-import { TiCancel } from "react-icons/ti";
+import { IoArrowUndoSharp } from "react-icons/io5";
+import ButtonTabel from '../Button/ButtonTabel';
 
 const FormTambahDataPenerima: React.FC = () => {
   return (
     <div className="w-full mx-auto p-6 md:p-10 rounded bg-white h-full">
       <form className="w-full">
-        <div className="mb-5">
-          <label  className="block mb-2">Nama Penerima</label>
+       <div className="mb-5 relative">
+          <label className="inline-block font-semibold">Nama Penerima</label>
+           <span className="text-red-500 p-1">*</span>
           <select
-            className="w-full p-2 border rounded-md px-2"
+            className="w-full p-2 border rounded-md px-2 mt-2"
           >
-            <option value="nama1">Kristina</option>
+            <option value="nama1">Eka</option>
             <option value="nama2">Galih</option>
           </select>
         </div>
-        <div className="mb-5">
-          <label  className="block mb-2">Jenis Wajib Pajak</label>
+        <div className="mb-5 relative">
+          <label className="inline-block font-semibold">Jenis Wajib Pajak</label>
+           <span className="text-red-500 p-1">*</span>
           <input
             type="text"
             disabled
             className="w-full p-2 border rounded-md  disabled:bg-gray-200"
           />
         </div>
-        <div className="mb-5">
-          <label  className="block mb-2">Metode Potong</label>
+       <div className="mb-5 relative">
+          <label className="inline-block font-semibold">Metode Potong</label>
+           <span className="text-red-500 p-1">*</span>
          <select
-            className="w-full p-2 border rounded-md px-2"
+            className="w-full p-2 border rounded-md px-2 mt-2"
           >
             <option value="metode1">Cek</option>
             <option value="metode2">ATM</option>
           </select>
         </div>
-        <div className="mb-5">
-          <label className="block mb-2">Penghasilan Bruto</label>
+        <div className="mb-5 relative">
+          <label className="inline-block font-semibold">Penghasilan Bruto</label>
+           <span className="text-red-500 p-1">*</span>
           <input
             type="text"
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded-md mt-2"
           />
         </div>
-        <div className="mb-5">
-          <label className="block mb-2">Tarif Pajak</label>
-          <input
-            type="text"
-            disabled
-            className="w-full p-2 border rounded-md  disabled:bg-gray-200"
-          />
-        </div>
-        <div className="mb-5">
-          <label className="block mb-2">Potongan Pajak</label>
+        <div className="mb-5 relative">
+          <label className="inline-block font-semibold">Tarif Pajak</label>
+           <span className="text-red-500 p-1">*</span>
           <input
             type="text"
             disabled
-            className="w-full p-2 border rounded-md  disabled:bg-gray-200"
+            className="w-full p-2 border rounded-md mt-2  disabled:bg-gray-200"
           />
         </div>
-        <div className="mb-5">
-          <label  className="block mb-2">Penghasilan Diterima</label>
+       <div className="mb-5 relative">
+          <label className="inline-block font-semibold">Potongan Pajak</label>
+           <span className="text-red-500 p-1">*</span>
+          <input
+            type="text"
+            disabled
+            className="w-full p-2 border rounded-md mt-2  disabled:bg-gray-200"
+          />
+        </div>
+        <div className="mb-5 relative">
+          <label className="inline-block font-semibold">Penghasilan Diterima</label>
+           <span className="text-red-500 p-1">*</span>
           <input
             type="text"
              disabled
-            className="w-full p-2 border rounded-md  disabled:bg-gray-200"
+            className="w-full p-2 border rounded-md mt-2 disabled:bg-gray-200"
           />
         </div>
-        <div className="mb-5">
-          <label  className="block mb-2">Tanggal Potong</label>
+        <div className="mb-5 relative">
+          <label className="inline-block font-semibold">Tanggal Potong</label>
+           <span className="text-red-500 p-1">*</span>
           <input
             type="text"
             disabled
-            className="w-full p-2 border rounded-md  disabled:bg-gray-200"
+            className="w-full p-2 border rounded-md mt-2 disabled:bg-gray-200"
           />
         </div>
          
       </form>
         <div className='flex gap-5 justify-start pt-8 text-white '>
-        <Link to="/inventaris">
-          <button className='bg-gray-400 p-2 rounded px-4 flex gap-1 text-sm'>
-          <TiCancel size={20} clasName="p-1 text-white  "/>
-          <span>Kembali</span>
-        </button>
+        <Link to="/detailPenerima21">
+          <ButtonTabel 
+            text='Kembali' 
+            icon={<IoArrowUndoSharp size={16}/>} 
+            bgColor='bg-gray'
+          /> 
         </Link>
-        <button className='bg-purple p-2 rounded px-4 flex gap-1 text-sm'>
-          <IoIosSave size={18} clasName="p-1" />
-          <span>Simpan</span>
-        </button>
+
+        <Link to="">
+        <ButtonTabel 
+          text='Simpan' 
+          icon={<IoIosSave size={16}/>} 
+          bgColor='bg-tambah-data'/> 
+      </Link>
       </div>
     </div>
   );

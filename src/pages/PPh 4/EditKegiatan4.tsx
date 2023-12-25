@@ -5,19 +5,19 @@ import { Link } from 'react-router-dom';
 
 const EditKegiatan4: React.FC = () => {
   return (
-    <div className="pl-4 lg:pl-60 xl:pl-64 xl:p-10 pt-24 xl:pt-28 w-full min-h-screen">
+    <div className="pl-4 lg:pl-60 xl:pl-72 pt-24 xl:pt-28 w-full min-h-screen pb-10">
       <div className="rounded-xl px-7">
-        <div className="font-semibold my-3 pl-3">
-          <h1 className='text-lg pb-2'>Form Tambah Data Kegiatan PPh 4 ayat 2</h1>
+        <div className="my-3 pl-3">
+          <h1 className='text-base md:text-lg font-semibold pb-2'>Form Tambah Data Kegiatan PPh 4 ayat 2</h1>
           <ol className="list-none inline-flex text-xs md:text-sm">
             <Link to="/kegiatanPPh4">
-            <li className="flex items-center text-purple">
+            <li className="flex items-center  ">
               <p className="text-gray-800">PPh 4 ayat 2</p>
               <IoIosArrowForward className="fill-current w-3 h-3 mx-3" />
             </li>
             </Link>
             <Link to="/kegiatanPPh4">
-             <li className="flex items-center text-purple">
+             <li className="flex items-center  ">
               <p className="text-gray-800">Data PPh 4 ayat 2</p>
               <IoIosArrowForward className="fill-current w-3 h-3 mx-3" />
             </li>

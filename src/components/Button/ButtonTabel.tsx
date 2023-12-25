@@ -4,14 +4,16 @@ interface ButtonTabelProps {
   text: string;
   icon: ReactNode;
   onClick?: () => void;
+  bgColor?: string;
    
 }
 
-const ButtonTabel: React.FC<ButtonTabelProps> = ({ text, icon, onClick }) => {
+const ButtonTabel: React.FC<ButtonTabelProps> = ({ text, icon, onClick, bgColor }) => {
   return (
-    <div>
-      <button  onClick={onClick} className="bg-purple text-white p-2  flex gap-2 text-sm bg-purple  px-3 rounded">
-        {icon && 
+    <div className=''>
+      <button onClick={onClick} 
+        className={`text-white p-2 flex gap-2 text-sm px-3 rounded shadow-md ${bgColor || ''}`}>
+          {icon && 
         <span className="">
             {icon}
         </span>}

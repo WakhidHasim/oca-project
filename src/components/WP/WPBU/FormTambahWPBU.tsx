@@ -1,7 +1,8 @@
 import React from 'react';
 import { IoIosSave } from "react-icons/io";
-import { TiCancel } from "react-icons/ti";
+import { IoArrowUndoSharp } from "react-icons/io5";
 import { Link } from 'react-router-dom';
+import ButtonTabel from '../../Button/ButtonTabel';
 
 const FormTambahWPBU: React.FC = () => {
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,96 +15,102 @@ const FormTambahWPBU: React.FC = () => {
   return (
     <div className="w-full mx-auto p-6 md:p-10 rounded bg-white h-full">
      <form className="w-full">
-         <div className="mb-5">
-          <label className="block mb-2">Nama Badan Usaha</label>
+          <div className="mb-5 relative">
+          <label className="inline-block font-semibold text-base mb-2">Nama Badan Usaha</label>
+          <span className="text-red-500 p-1">*</span>
           <input
             type="text"
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded-md mt-2 text-sm"
           />
         </div>
 
-         <div className="mb-5">
-          <label htmlFor="uploadBuktiBayar" className="block mb-2">Foto Identitas Badan Usaha</label>
+         <div className="mb-5 relative">
+          <label className="inline-block font-semibold text-base mb-2">Foto Identitas Badan Usaha</label>
+          <span className="text-red-500 p-1">*</span>
           <input
             type="file" 
-            id="uploadBuktiBayar"
-            name="uploadBuktiBayar"
-            className="w-full p-2 border rounded-md"
+           
+            className="w-full p-2 border rounded-md mt-2 text-sm"
             onChange={handleFileUpload}
           />
         </div>
 
-        <div className="mb-5">
-          <label className="block mb-2">Apakah Memiliki NPWP</label>
+         <div className="mb-5 relative">
+          <label className="inline-block font-semibold text-base mb-2">Apakah memiliki NPWP?</label>
+          <span className="text-red-500 p-1">*</span>
            <select
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded-md text-sm mt-2"
           >
             <option value="ya">YA</option>
             <option value="tidak">TIDAK</option>
           </select>
         </div>
 
-        <div className="mb-5">
-          <label className="block mb-2">NPWP</label>
+         <div className="mb-5 relative">
+          <label className="inline-block font-semibold text-base mb-2">NPWP</label>
+          <span className="text-red-500 p-1">*</span>
           <input
             type="text"
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded-md text-sm mt-2"
           />
         </div>
 
-        <div className="mb-5">
-          <label className="block">Nama Wajib Pajak/Badan Usaha</label>
-          <span className="text-gray-600 text-sm italic"> *Isikan sesuai nama identitas NPWP. Jika belum ber-NPWP iskan nama Badan Usaha</span>
+        <div className="mb-5 relative">
+          <label className="inline-block font-semibold text-base mb-2">Nama Wajib Pajak/Badan Usaha</label>
+          <span className="text-red-500 p-1">*</span>
+          <p className=" text-sm italic"> 
+            <span className='text-red-500'>*</span>
+            Isikan sesuai nama identitas NPWP. Jika belum ber-NPWP iskan nama Badan Usaha</p>
           <input
             type="text"
-            className="w-full p-2 mt-3 border rounded-md"
+            className="w-full p-2 mt-2 text-sm border rounded-md"
           />
         </div>
-        <div className="mb-5">
-          <label htmlFor="uploadBuktiBayar" className="block mb-2">Upload Foto NPWP</label>
+
+         <div className="mb-5 relative">
+          <label className="inline-block font-semibold text-base mb-2">Upload Foto NPWP</label>
+          <span className="text-red-500 p-1">*</span>
         <input
             type="file" 
-            id="uploadBuktiBayar"
-            name="uploadBuktiBayar"
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded-md text-sm mt-2"
             onChange={handleFileUpload}
           />
         </div>
-        <div className="mb-5">
-          <label className="block mb-2">Kota / Kabupaten NPWP</label>
+         <div className="mb-5 relative">
+          <label className="inline-block font-semibold text-base mb-2">Kota / Kabupaten NPWP</label>
+          <span className="text-red-500 p-1">*</span>
+          <input
+            type="text"
+            className="w-full p-2 border rounded-md text-sm mt-2"
+          />
+        </div>
+
+         <div className="mb-5 relative">
+          <label className="inline-block font-semibold text-base mb-2">Narahubung (Contact Person)</label>
+          <span className="text-red-500 p-1">*</span>
           <input
             type="text"
             className="w-full p-2 border rounded-md"
           />
         </div>
 
-        <div className="mb-5">
-          <label className="block mb-2">Narahubung (Contact Person)</label>
-          <input
-            type="text"
-            className="w-full p-2 border rounded-md"
-          />
-        </div>
-        <div className="mb-5">
-          <label className="block mb-2">Nama Narahubung (Contact Person)</label>
-          <input
-            type="text"
-            className="w-full p-2 border rounded-md"
-          />
-        </div>
        
       </form>
       <div className='flex gap-5 justify-start pt-8 text-white '>
-        <Link to="/dataWPBU">
-          <button className='bg-gray-400 p-2 rounded px-4 flex gap-1 text-sm'>
-            <TiCancel size={20} clasName="p-1 text-white  "/>
-            <span>Kembali</span>
-          </button>
+         <Link to="/dataWPBU">
+          <ButtonTabel 
+            text='Kembali' 
+            icon={<IoArrowUndoSharp size={16}/>} 
+            bgColor='bg-gray'
+          /> 
         </Link>
-          <button className='bg-purple p-2 rounded px-4 flex gap-1 text-sm'>
-            <IoIosSave size={18} clasName="p-1" />
-            <span>Simpan</span>
-          </button>
+
+        <Link to="">
+        <ButtonTabel 
+          text='Simpan' 
+          icon={<IoIosSave size={16}/>} 
+          bgColor='bg-tambah-data'/> 
+      </Link>
         </div>
     </div>
   );

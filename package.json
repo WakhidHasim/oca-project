@@ -10,18 +10,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@types/react-datepicker": "^4.19.4",
+    "@types/react-router-dom": "^5.3.3",
+    "inter-font": "^3.19.0",
     "moment": "^2.29.4",
     "react": "^18.2.0",
+    "react-date-range": "^1.4.0",
     "react-date-range-picker": "^0.5.2",
     "react-datepicker": "^4.24.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
-    "react-router-dom": "^6.20.0",
+    "react-router-dom": "^6.20.1",
+    "react-select": "^5.8.0",
     "react-table-filter": "^2.0.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",
+    "@types/react-datepicker": "^4.19.3",
     "@types/react-dom": "^18.2.15",
     "@types/react-table-filter": "^1.0.6",
     "@typescript-eslint/eslint-plugin": "^6.10.0",

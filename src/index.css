@@ -4,7 +4,7 @@
 
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 .bg-custom-purple {
@@ -26,10 +26,32 @@ body {
   color: #FF7900;
 }
 
+.bg-tambah-data{
+  background-color: #700070;
+  opacity: 80%;
+} 
+
 .bg-purple {
   background-color: #700070;
+  opacity: 90%;
 }
 
 .text-purple {
   color: #700070;
+}
+
+.bg-delete{
+  background-color: #DC2626;
+}
+
+.bg-detail{
+  background-color: #1D4ED8;
+}
+
+.bg-approve{
+  background-color: #16A34A;
+}
+
+.bg-gray{
+  background-color: #9CA3AF;
 }

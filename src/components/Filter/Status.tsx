@@ -26,7 +26,7 @@ const Status: React.FC = () => {
         value={selectedOption}
         onChange={handleChange}
         options={statusOptions}
-        placeholder="Select Status"
+        placeholder="Pilih Status"
         className='rounded'
         
       />

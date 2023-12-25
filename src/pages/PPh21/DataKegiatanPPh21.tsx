@@ -15,21 +15,23 @@ const DataKegiatanPPh21: React.FC = () => {
   const ActionsButtons: React.FC = () => (
     <div className="flex space-x-2 items-center justify-center text-white">
       <Link to="/detailPenerima21">
-        <button className="bg-blue-700 p-2 flex gap-1 rounded">
-          <TbListDetails size={17} className="" />
-          <span>Detail</span>
-        </button>
+        <ButtonTabel 
+          text='Detail' 
+          icon={<TbListDetails size={16}/>} 
+          bgColor='bg-detail'/> 
       </Link>
       <Link to="/editKegiatan21">
-        <button className="bg-orange p-2 flex gap-1 rounded">
-          <FaEdit size={17} className="" />
-          <span>Edit</span>
-        </button>
+        <ButtonTabel 
+          text='Edit' 
+          icon={<FaEdit  size={16}/>} 
+          bgColor='bg-orange'/> 
       </Link>
-      <button className="bg-red-600 p-2 flex gap-1 rounded">
-        <RiDeleteBin6Fill size={17} className="" />
-        <span>Delete</span>
-      </button>
+      <Link to="">
+        <ButtonTabel 
+          text='Hapus' 
+          icon={<RiDeleteBin6Fill size={16}/>} 
+          bgColor='bg-delete'/> 
+      </Link>
     </div>
   );
 
@@ -49,12 +51,12 @@ const DataKegiatanPPh21: React.FC = () => {
   ];
 
   return (
-    <div className="pl-4 lg:pl-60 xl:pl-64 xl:p-10 pt-24 xl:pt-28 w-full min-h-screen relative">
+    <div className="pl-4 lg:pl-60 xl:pl-72 pt-24 xl:pt-28 w-full min-h-screen  relative">
       <div className="rounded-xl px-7">
-        <div className="font-semibold my-3 pl-3 pb-4">
-          <h1 className='text-lg xl:text-2xl py-2'>Data Kegiatan 21</h1>
+        <div className="my-3 pl-3 pb-4">
+          <h1 className='text-base md:text-lg font-semibold py-2'>Data Kegiatan 21</h1>
           <ol className="list-none inline-flex text-xs md:text-sm">
-            <li className="flex items-center text-purple">
+            <li className="flex items-center  ">
               <p className="text-gray-800">PPh 21</p>
               <IoIosArrowForward className="fill-current w-3 h-3 mx-3" />
             </li>
@@ -68,7 +70,10 @@ const DataKegiatanPPh21: React.FC = () => {
             <div className="flex flex-col md:flex-row py-3 justify-between">
               <div className="flex md:flex-row flex-col items-center">
                 <Link to="/tambahKegiatan21">
-                  <ButtonTabel text='Tambah Data' icon={<FaPlus size={16}/>} /> 
+                  <ButtonTabel text='Tambah Data' 
+                  icon={<FaPlus size={16}/>} 
+                  bgColor='bg-tambah-data'
+                  /> 
                 </Link>
               </div>
               <div className="flex md:flex-row flex-col items-center">
