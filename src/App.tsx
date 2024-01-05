@@ -3,7 +3,7 @@ import Login from './pages/Auth/Login';
 import Verifikasi from './pages/Auth/Verifikasi';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Layout from './components/Navigation/Layout';
-import DataPPh21Shortcut from "./pages/Dashboard/ShortcutDataPPh21";
+import DataPPh21Shortcut from './pages/Dashboard/ShortcutDataPPh21';
 import PanduanInformasi from './pages/Panduan/PanduanPPh';
 import DataKegiatanPPh21 from './pages/PPh21/DataKegiatanPPh21';
 import TambahData from './pages/PPh21/TambahDataKegiatan';
@@ -12,7 +12,7 @@ import TambahDataPenerima from './pages/PPh21/TambahDataPenerima';
 import EditKegiatan from './pages/PPh21/EditKegiatan';
 import DataKegiatan23 from './pages/PPh23/DataKegiatan23';
 import TambahDataKegiatan from './pages/PPh23/TambahDataKegiatan';
-import DataKegiatanPPh4 from "./pages/PPh 4/DataKegiatanPPh4"
+import DataKegiatanPPh4 from './pages/PPh 4/DataKegiatanPPh4';
 import TambahKegiatan4 from './pages/PPh 4/TambahKegiatan4';
 import DataInventaris from './pages/Inventaris Pajak/DataInventaris';
 import TambahInventaris from './pages/Inventaris Pajak/TambahInventaris';
@@ -35,63 +35,56 @@ function App(): JSX.Element {
   return (
     <Router>
       <Routes>
-
         {/* Auth */}
-        <Route 
-         path="/" 
-          element={<Login />} 
-        />
-        <Route 
-          path="/verifikasi" 
-          element={<Verifikasi />} 
-        />
-        <Route 
-          path="/dashboard" 
-          element={
-            <Layout> 
-              <Dashboard />
-            </Layout>} 
-        />
-
-         <Route
-          path='/panduan'
+        <Route path='/' element={<Login />} />
+        <Route path='/verifikasi' element={<Verifikasi />} />
+        <Route
+          path='/dashboard'
           element={
             <Layout>
-              <PanduanInformasi/>
+              <Dashboard />
             </Layout>
           }
         />
 
-        <Route 
+        <Route
+          path='/panduan'
+          element={
+            <Layout>
+              <PanduanInformasi />
+            </Layout>
+          }
+        />
+
+        <Route
           path='/detailPanduan21'
           element={
             <Layout>
               <DetailPanduanPPh21 />
             </Layout>
           }
-          />
+        />
 
-        <Route 
+        <Route
           path='/detailPanduan23'
           element={
             <Layout>
               <DetailPanduanPPh23 />
             </Layout>
           }
-          />
+        />
 
-          <Route 
+        <Route
           path='/detailPanduan4'
           element={
             <Layout>
               <DetailPanduanPPh4 />
             </Layout>
           }
-          />
-
+        />
 
         {/* PPH 21 */}
-        <Route 
+        <Route
           path='/PPh21Shortcut'
           element={
             <Layout>
@@ -99,7 +92,7 @@ function App(): JSX.Element {
             </Layout>
           }
         />
-       
+
         <Route
           path='/dataKegiatan21'
           element={
@@ -107,7 +100,7 @@ function App(): JSX.Element {
               <DataKegiatanPPh21 />
             </Layout>
           }
-          />
+        />
 
         <Route
           path='/tambahKegiatan21'
@@ -117,45 +110,42 @@ function App(): JSX.Element {
             </Layout>
           }
         />
-        
-        <Route
-        path='/editKegiatan21'
-        element={
-          <Layout>
-            <EditKegiatan />
-          </Layout>
-          }
-        />
 
-       <Route
-        path='/detailPenerima21'
-        element={
-          <Layout>
-            <DetailPenerima />
-          </Layout>
+        <Route
+          path='/editKegiatan21'
+          element={
+            <Layout>
+              <EditKegiatan />
+            </Layout>
           }
         />
 
         <Route
-        path='/tambahPenerima21'
-        element={
-          <Layout>
-            <TambahDataPenerima />
-          </Layout>
+          path='/detailPenerima21'
+          element={
+            <Layout>
+              <DetailPenerima />
+            </Layout>
           }
         />
 
-         <Route
-        path='/editPenerima21'
-        element={
-          <Layout>
-            <EditPenerima />
-          </Layout>
+        <Route
+          path='/tambahPenerima21'
+          element={
+            <Layout>
+              <TambahDataPenerima />
+            </Layout>
           }
         />
 
-
-        
+        <Route
+          path='/editPenerima21'
+          element={
+            <Layout>
+              <EditPenerima />
+            </Layout>
+          }
+        />
 
         {/* PPH 23 */}
         <Route
@@ -165,9 +155,9 @@ function App(): JSX.Element {
               <DataKegiatan23 />
             </Layout>
           }
-          />
+        />
 
-          <Route
+        <Route
           path='/tambahKegiatan23'
           element={
             <Layout>
@@ -180,7 +170,7 @@ function App(): JSX.Element {
           path='/editKegiatan23'
           element={
             <Layout>
-             <EditKegiatan23 />
+              <EditKegiatan23 />
             </Layout>
           }
         />
@@ -204,7 +194,7 @@ function App(): JSX.Element {
           }
         />
 
-         <Route
+        <Route
           path='/editkegiatanPPh4'
           element={
             <Layout>
@@ -236,7 +226,7 @@ function App(): JSX.Element {
           path='/editinventaris'
           element={
             <Layout>
-             <EditInventaris />
+              <EditInventaris />
             </Layout>
           }
         />
@@ -305,7 +295,6 @@ function App(): JSX.Element {
             </Layout>
           }
         />
-
       </Routes>
     </Router>
   );

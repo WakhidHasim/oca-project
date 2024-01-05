@@ -1,81 +1,274 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TabelData from '../../components/Tabel/TabelData';
 import { IoIosArrowForward } from 'react-icons/io';
 import ButtonTabel from '../../components/Button/ButtonTabel';
 import DateRange from '../../components/Filter/DateRange';
 import SearchBar from '../../components/Search/SearchBar';
-import { FaEdit } from "react-icons/fa";
-import { RiDeleteBin6Fill } from "react-icons/ri";
-import { FaPlus } from "react-icons/fa6";
+import { FaEdit } from 'react-icons/fa';
+import { RiDeleteBin6Fill } from 'react-icons/ri';
+import { FaPlus } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
+import { toast } from 'react-toastify';
+
+interface ApiData {
+  kodeKegiatanBadan: string;
+  tanggalInput: string;
+  uraianKegiatan: string;
+  idKegiatanAnggaran: string;
+  kodeJenisPenghasilan: number;
+  kodeJenisPajak: number;
+  pic: string;
+  kodeWPBadan: string;
+  penghasilanBruto: number;
+  kodeObjek: string;
+  tarifPajak: number;
+  potonganPajak: number;
+  penghasilanDiterima: number;
+  noRekening: string;
+  namaRekening: string;
+  bankTransfer: string;
+  narahubung: string;
+  invoice: string;
+  fakturPajak: string;
+  dokumenKerjasamaKegiatan: string;
+  status: string;
+  idl: string;
+}
+
+interface WajibPajakBadanUsaha {
+  kodeWPBadan: string;
+  namaBadan: string;
+  email: string;
+  npwp: string;
+  namaNpwp: string;
+  kotaNpwp: string;
+  bankTransfer: string;
+  noRekening: string;
+  namaRekening: string;
+  namaNaraHubung: string;
+  kontakNaraHubung: string;
+  adaSkbPPh23: boolean;
+  masaBerlakuBebasPPh23: string | null;
+  fileFotoIdentitasBadan: string;
+  fileFotoBuktiRekening: string;
+  fileFotoNpwp: string | null;
+  fileSuratBebasPPh23: string | null;
+  statusPkp: string;
+}
+
 const DataKegiatanPPh4: React.FC = () => {
-  const ActionsButtons: React.FC = () => (
-    <div className="flex space-x-2 items-center justify-center text-white">
-       <Link to="/editkegiatanPPh4">
-        <ButtonTabel 
-          text='Edit' 
-          icon={<FaEdit size={16}/>} 
-          bgColor='bg-orange'/> 
+  const [apiData, setApiData] = useState<ApiData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const [badanUsahaOptions, setBadanUsahaOptions] = useState<
+    WajibPajakBadanUsaha[]
+  >([]);
+
+  const mapNamaBadan = (kodeWPBadan: string) => {
+    const badanUsaha = badanUsahaOptions.find(
+      (badanUsaha) => badanUsaha.kodeWPBadan === kodeWPBadan
+    );
+    return badanUsaha ? badanUsaha.namaBadan : 'Nama Badan Not Found';
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        'http://localhost:3000/api/kegiatan-penghasilan-badan/pph4'
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setApiData(data.result);
+      setLoading(false);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error fetching data:', error.message);
+      } else {
+        console.error('Unknown error:', error);
+      }
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    fetch('http://localhost:3000/api/wajib-pajak-badan-usaha')
+      .then((response) => response.json())
+      .then(
+        (data: {
+          status: { code: number; description: string };
+          result: WajibPajakBadanUsaha[];
+        }) => {
+          if (data.status.code === 200) {
+            setBadanUsahaOptions(data.result);
+          } else {
+            console.error('Error fetching data:', data.status.description);
+          }
+        }
+      );
+  }, []);
+
+  const formatIndonesianDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      weekday: 'long',
+    };
+
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', options);
+  };
+
+  const handleDelete = async (kodeKegiatanBadan: string) => {
+    MySwal.fire({
+      title: 'Apakah Anda Yakin ?',
+      text: 'Data yang dihapus tidak bisa dikembalikan!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Hapus',
+      cancelButtonText: 'Batal',
+    }).then(async (result: { isConfirmed: boolean }) => {
+      if (result.isConfirmed) {
+        const url = `http://localhost:3000/api/kegiatan-penghasilan-badan/pph4/${kodeKegiatanBadan}`;
+        const headers = {
+          'Content-Type': 'application/json',
+        };
+
+        try {
+          const response = await fetch(url, {
+            method: 'DELETE',
+            headers,
+          });
+
+          if (!response.ok) {
+            throw new Error(`Error deleting data: ${response.status}`);
+          }
+
+          fetchData();
+          toast.success('Data Berhasil Dihapus!');
+        } catch (error) {
+          console.error('Error deleting data:', error);
+          MySwal.fire(
+            'Error',
+            'Failed to delete data. Please try again.',
+            'error'
+          );
+        }
+      }
+    });
+  };
+
+  const formatCurrency = (amount: number): string => {
+    // Format number to currency string
+    const formattedAmount = new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(amount);
+
+    return formattedAmount;
+  };
+
+  const ActionsButtons: React.FC<{ kodeKegiatanBadan: string }> = ({
+    kodeKegiatanBadan,
+  }) => (
+    <div className='flex space-x-2 items-center text-white'>
+      <Link to='/editkegiatanPPh4'>
+        <ButtonTabel
+          text='Edit'
+          icon={<FaEdit size={16} />}
+          bgColor='bg-orange'
+        />
       </Link>
-      <Link to="">
-        <ButtonTabel 
-          text='Hapus' 
-          icon={<RiDeleteBin6Fill size={16}/>} 
-          bgColor='bg-delete'/> 
+      <Link to=''>
+        <ButtonTabel
+          text='Hapus'
+          onClick={() => handleDelete(kodeKegiatanBadan)}
+          icon={<RiDeleteBin6Fill size={16} />}
+          bgColor='bg-delete'
+        />
       </Link>
     </div>
   );
 
-  const columns = ['No', 'Uraian Kegiatan', 'Nama Penerima', 'Penghasilan Bruto', 'Tanggal Potong', 'Aksi'];
-  const data: {
-    id: number;
-    col1: string;
-    col2: string;
-    col3: string;
-    col4: string;
-    col5: React.ReactNode;
-  }[] = [
-    { id: 1, col1: '04-12-23', col2: 'Data 2', col3: '01', col4: '10000', col5: <ActionsButtons /> },
-    { id: 2, col1: '04-12-23', col2: 'Data 5', col3: '02', col4: '20000', col5: <ActionsButtons /> },
+  const columns = [
+    'No',
+    'Tanggal Input',
+    'Uraian Kegiatan',
+    'Nama Penerima',
+    'Penghasilan Bruto',
+    'Aksi',
   ];
 
   return (
-    <div className="pl-4 lg:pl-60 xl:pl-72 pt-24 xl:pt-28 w-full min-h-screen pb-10">
-      <div className="rounded-xl px-7">
-        <div className="my-3 pl-3 pb-4">
-          <h1 className='text-base md:text-lg font-semibold py-2'>Data PPh 4 ayat 2</h1>
+    <div className='pl-4 lg:pl-60 xl:pl-72 pt-24 xl:pt-28 w-full min-h-screen pb-10'>
+      <div className='rounded-xl px-7'>
+        <div className='my-3 pl-3 pb-4'>
+          <h1 className='text-base md:text-lg font-semibold py-2'>
+            Data PPh 4 ayat 2
+          </h1>
 
-          <ol className="list-none inline-flex text-xs md:text-sm">
-            <li className="flex items-center  ">
-              <p className="text-gray-800">PPh 4 Ayat 2</p>
-              <IoIosArrowForward className="fill-current w-3 h-3 mx-3" />
+          <ol className='list-none inline-flex text-xs md:text-sm'>
+            <li className='flex items-center  '>
+              <p className='text-gray-800'>PPh 4 Ayat 2</p>
+              <IoIosArrowForward className='fill-current w-3 h-3 mx-3' />
             </li>
-            <li className="flex items-center">
-              <p className="text-gray-800">Data PPh 4 ayat 2</p>
+            <li className='flex items-center'>
+              <p className='text-gray-800'>Data PPh 4 ayat 2</p>
             </li>
           </ol>
         </div>
         <div className='bg-white mt-5 rounded'>
-          <div className="w-full mx-auto p-5 rounded">
-            <div className="flex flex-col md:flex-row py-3 justify-between">
-              <div className="flex md:flex-row flex-col items-center">
-                <Link to="/tambahkegiatanPPh4">
-                  <ButtonTabel text='Tambah Data' 
-                  icon={<FaPlus size={16}/>} 
-                  bgColor='bg-tambah-data '
-                  
-                  /> 
+          <div className='w-full mx-auto p-5 rounded'>
+            <div className='flex flex-col md:flex-row py-3 justify-between'>
+              <div className='flex md:flex-row flex-col items-center'>
+                <Link to='/tambahkegiatanPPh4'>
+                  <ButtonTabel
+                    text='Tambah Data'
+                    icon={<FaPlus size={16} />}
+                    bgColor='bg-tambah-data '
+                  />
                 </Link>
               </div>
-              <div className="flex md:flex-row flex-col items-center">
+              <div className='flex md:flex-row flex-col items-center'>
                 <div className='flex justify-end'>
                   <DateRange />
                   <SearchBar />
                 </div>
               </div>
             </div>
-            <TabelData columns={columns} data={data} />
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <TabelData
+                columns={columns}
+                data={apiData.map((item, index) => ({
+                  id: index + 1,
+                  col1: formatIndonesianDate(item.tanggalInput),
+                  col2: item.uraianKegiatan,
+                  col3: mapNamaBadan(item.kodeWPBadan),
+                  col4: formatCurrency(item.penghasilanBruto),
+                  col5: (
+                    <ActionsButtons
+                      kodeKegiatanBadan={item.kodeKegiatanBadan}
+                    />
+                  ),
+                }))}
+              />
+            )}
           </div>
         </div>
       </div>

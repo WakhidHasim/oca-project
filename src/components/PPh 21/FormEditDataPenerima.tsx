@@ -1,16 +1,18 @@
 import React from 'react';
 import Select from 'react-select';
 import { Link } from 'react-router-dom';
-import { IoIosSave } from 'react-icons/io';
+import { FaEdit } from 'react-icons/fa';
 import { IoArrowUndoSharp } from 'react-icons/io5';
 import ButtonTabel from '../Button/ButtonTabel';
 
-const FormTambahDataPenerima: React.FC = () => {
-  const optionsPenerima = [{ value: 'no1', label: 'Wakhid Hasim' }];
+const FormEditDataPenerima: React.FC = () => {
+  const optionsPenerima = [{ value: 'no1', label: 'Wiwi Widayani, M.Kom' }];
 
-  const optionsMetodePotong = [{ value: 'no1', label: 'Pegawai Tetap' }];
+  const optionsMetodePotong = [
+    { value: 'no1', label: 'Pegawai Tetap Pisah Gaji' },
+  ];
 
-  const optionsObjekPajak = [{ value: 'no1', label: 'DPK' }];
+  const optionsObjekPajak = [{ value: 'no1', label: 'Pegawai Tetap' }];
 
   return (
     <div className='w-full mx-auto p-6 md:p-10 rounded bg-white h-full'>
@@ -140,7 +142,7 @@ const FormTambahDataPenerima: React.FC = () => {
           />
         </div>
       </form>
-      <div className='flex gap-5 justify-start pt-8 text-white '>
+      <div className='flex gap-5 justify-end pt-8 text-white '>
         <Link to='/detailPenerima21'>
           <ButtonTabel
             text='Kembali'
@@ -151,13 +153,13 @@ const FormTambahDataPenerima: React.FC = () => {
 
         <Link to=''>
           <ButtonTabel
-            text='Simpan'
-            icon={<IoIosSave size={16} />}
-            bgColor='bg-tambah-data'
+            text='Edit'
+            icon={<FaEdit size={16} />}
+            bgColor='bg-orange'
           />
         </Link>
       </div>
     </div>
   );
 };
-export default FormTambahDataPenerima;
+export default FormEditDataPenerima;
