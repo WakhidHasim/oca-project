@@ -19,7 +19,7 @@ const Verifikasi: React.FC = () => {
                   <img src={logo} className='w-full' alt='Login' />
                 </div>
                 <h1 className='font-bold text-lg md:text-2xl py-2 pb-3 uppercase drop-shadow-md'>
-                  One Collecting Agent (OCA)
+                  One Collecting Agent
                 </h1>
               </div>
               <h2 className='font-semibold text-base lg:text-lg pb-2'>

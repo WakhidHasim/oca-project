@@ -48,7 +48,24 @@ const VerifikasiWPOP: React.FC = () => {
     col3: string;
     col4: string;
     col5: React.ReactNode;
-  }[] = [];
+  }[] = [
+    {
+      id: 1,
+      col1: '04-12-23',
+      col2: 'Data 2',
+      col3: '01',
+      col4: '10000',
+      col5: <ActionsButtons />,
+    },
+    {
+      id: 2,
+      col1: '04-12-23',
+      col2: 'Data 5',
+      col3: '02',
+      col4: '20000',
+      col5: <ActionsButtons />,
+    },
+  ];
 
   return (
     <div className='pl-4 lg:pl-60 xl:pl-72 pt-24 xl:pt-28 w-full min-h-screen relative'>

@@ -5,7 +5,6 @@ import { IoIosSave } from 'react-icons/io';
 import { IoArrowUndoSharp } from 'react-icons/io5';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
 import ButtonTabel from '../Button/ButtonTabel';
 
 type SelectedBadanUsaha = {
@@ -62,7 +61,7 @@ interface BadanUsaha {
   statusPkp: string;
 }
 
-const FormTambahKegiatan: React.FC = () => {
+const FormTambahKegiatan23: React.FC = () => {
   const navigate = useNavigate();
 
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
@@ -70,7 +69,6 @@ const FormTambahKegiatan: React.FC = () => {
   const [dokumenKerjasamaFile, setDokumenKerjasamaFile] = useState<File | null>(
     null
   );
-
   const [optionsObjekPajak, setOptionsObjekPajak] = useState<
     { value: string; label: string; tarifNpwp: number }[]
   >([]);
@@ -83,14 +81,19 @@ const FormTambahKegiatan: React.FC = () => {
   const [optionsPengajuanAnggaran, setOptionsPengajuanAnggaran] = useState<
     { value: string; label: string }[]
   >([]);
-  const optionsPencairanPenghasilan = [{ value: 'dpk', label: 'DPK' }];
+
+  const selectedIdl = sessionStorage.getItem('selectedIdl') || '';
+  const namaSatker = sessionStorage.getItem('namaSatker') || '';
+
+  const optionsPencairanPenghasilan = [
+    { value: '233.03', label: 'DPK-Direktorat Perencanaan dan Keuangan' },
+    { value: selectedIdl, label: namaSatker },
+  ];
 
   const [selectedBadanUsaha, setSelectedBadanUsaha] =
     useState<SelectedBadanUsaha>(null);
-
   const [selectedObjekPajak, setSelectedObjekPajak] =
     useState<SelectedObjekPajak>(null);
-
   const [potonganPajak, setPotonganPajak] = useState<number | null>(null);
   const [penghasilanDiterima, setPenghasilanDiterima] = useState<number | null>(
     null
@@ -107,6 +110,7 @@ const FormTambahKegiatan: React.FC = () => {
     invoice: '',
     fakturPajak: '',
     dokumenKerjasamaKegiatan: '',
+    idl: '',
   });
 
   const handleFileUpload = (
@@ -114,14 +118,13 @@ const FormTambahKegiatan: React.FC = () => {
     fileType: string
   ) => {
     const file = event.target.files && event.target.files[0];
-
     if (file) {
       switch (fileType) {
         case 'invoice':
           setInvoiceFile(file);
           setFormData({
             ...formData,
-            invoice: file.name, // Menyimpan hanya nama file
+            invoice: file.name,
           });
           break;
         case 'fakturPajak':
@@ -131,7 +134,7 @@ const FormTambahKegiatan: React.FC = () => {
             fakturPajak: file.name,
           });
           break;
-        case 'dokumenKerjasama':
+        case 'dokumenKerjasamaKegiatan':
           setDokumenKerjasamaFile(file);
           setFormData({
             ...formData,
@@ -141,7 +144,6 @@ const FormTambahKegiatan: React.FC = () => {
         default:
           break;
       }
-
       console.log(`${fileType} uploaded:`, file.name);
     }
   };
@@ -150,7 +152,7 @@ const FormTambahKegiatan: React.FC = () => {
     const fetchJenisPenghasilanOptions = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/jenis-penghasilan-pph23`
+          `http://localhost:3000/api/jenis-penghasilan/pph23`
         );
         const data = await response.json();
         if (data && data.result && data.result.length > 0) {
@@ -190,7 +192,7 @@ const FormTambahKegiatan: React.FC = () => {
     const fetchObjekPajakOptions = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/objek-pajak-pph23`
+          `http://localhost:3000/api/objek-pajak/pph23`
         );
         const data = await response.json();
         if (data && data.result && data.result.length > 0) {
@@ -227,7 +229,6 @@ const FormTambahKegiatan: React.FC = () => {
         console.error('Error fetching Badan Usaha options:', error);
       }
     };
-
     fetchJenisPenghasilanOptions();
     fetchPengajuanAnggaranOptions();
     fetchObjekPajakOptions();
@@ -245,10 +246,8 @@ const FormTambahKegiatan: React.FC = () => {
     if (formData.penghasilanBruto && selectedObjekPajak?.tarifNpwp) {
       const penghasilanBruto = parseFloat(formData.penghasilanBruto);
       const tarifPajak = selectedObjekPajak.tarifNpwp;
-
       const potongan = penghasilanBruto * (tarifPajak / 100);
       const penghasilanDiterima = penghasilanBruto - potongan;
-
       setPotonganPajak(potongan);
       setPenghasilanDiterima(penghasilanDiterima);
     } else {
@@ -259,20 +258,17 @@ const FormTambahKegiatan: React.FC = () => {
 
   const formatRupiah = (value: number | null) => {
     if (value === null) return '';
-
     const formatter = new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     });
-
     return formatter.format(value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       const formDataToSubmit = new FormData();
       formDataToSubmit.append('uraianKegiatan', formData.uraianKegiatan);
@@ -288,36 +284,27 @@ const FormTambahKegiatan: React.FC = () => {
       formDataToSubmit.append('kodeWPBadan', formData.kodeWPBadan);
       formDataToSubmit.append('penghasilanBruto', formData.penghasilanBruto);
       formDataToSubmit.append('kodeObjek', formData.kodeObjek);
-
-      if (invoiceFile) {
-        formDataToSubmit.append('invoice', invoiceFile);
-      }
-
-      if (fakturPajakFile) {
-        formDataToSubmit.append('fakturPajak', fakturPajakFile);
-      }
-
-      if (dokumenKerjasamaFile) {
-        formDataToSubmit.append(
-          'dokumenKerjasamaKegiatan',
-          dokumenKerjasamaFile
-        );
-      }
-
-      const response = await axios.post(
-        'http://localhost:3000/api/kegiatan-penghasilan-badan/pph23',
-        formDataToSubmit,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+      formDataToSubmit.append('invoice', invoiceFile ? invoiceFile : '');
+      formDataToSubmit.append(
+        'fakturPajak',
+        fakturPajakFile ? fakturPajakFile : ''
       );
+      formDataToSubmit.append(
+        'dokumenKerjasamaKegiatan',
+        dokumenKerjasamaFile ? dokumenKerjasamaFile : ''
+      );
+      formDataToSubmit.append('idl', selectedIdl);
+
+      const url = 'http://localhost:3000/api/kegiatan-penghasilan-badan/pph23';
+      const response = await axios.post(url, formDataToSubmit, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
       // Handle response
       if (response.status === 200 && response.data) {
         const responseData = response.data;
-
         if (
           responseData.status &&
           responseData.status.code === 200 &&
@@ -377,8 +364,14 @@ const FormTambahKegiatan: React.FC = () => {
           </p>
           <input
             type='text'
-            id='uraian'
-            name='uraian'
+            id='uraianKegiatan'
+            name='uraianKegiatan'
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                uraianKegiatan: e.target.value,
+              })
+            }
             className='w-full p-2 mt-2 border rounded-md text-sm'
           />
         </div>
@@ -447,30 +440,18 @@ const FormTambahKegiatan: React.FC = () => {
         </div>
 
         <div className='mb-5 relative'>
-          <label className='inline-block font-semibold'>No Rekening</label>
+          <label className='inline-block font-semibold'>
+            Identitas Rekening
+          </label>
           <input
             type='text'
-            value={selectedBadanUsaha?.noRekening || ''}
-            disabled
-            className='w-full p-2 border rounded-md  disabled:bg-gray-200'
-          />
-        </div>
-
-        <div className='mb-5 relative'>
-          <label className='inline-block font-semibold'>Nama Rekening</label>
-          <input
-            type='text'
-            value={selectedBadanUsaha?.namaRekening || ''}
-            disabled
-            className='w-full p-2 border rounded-md  disabled:bg-gray-200'
-          />
-        </div>
-
-        <div className='mb-5 relative'>
-          <label className='inline-block font-semibold'>Bank Transfer</label>
-          <input
-            type='text'
-            value={selectedBadanUsaha?.bankTransfer || ''}
+            value={
+              selectedBadanUsaha
+                ? `${selectedBadanUsaha.bankTransfer || ''} - ${
+                    selectedBadanUsaha.noRekening || ''
+                  } - ${selectedBadanUsaha.namaRekening || ''}`
+                : ''
+            }
             disabled
             className='w-full p-2 border rounded-md  disabled:bg-gray-200'
           />
@@ -566,6 +547,16 @@ const FormTambahKegiatan: React.FC = () => {
             isSearchable
             isClearable
             placeholder='Pilih PIC (Pencairan Penghasilan)'
+            onChange={(
+              selectedOption: SingleValue<{ value: string; label: string }>
+            ) => {
+              if (selectedOption) {
+                setFormData({
+                  ...formData,
+                  pic: selectedOption.value,
+                });
+              }
+            }}
           />
         </div>
 
@@ -625,4 +616,4 @@ const FormTambahKegiatan: React.FC = () => {
     </div>
   );
 };
-export default FormTambahKegiatan;
+export default FormTambahKegiatan23;

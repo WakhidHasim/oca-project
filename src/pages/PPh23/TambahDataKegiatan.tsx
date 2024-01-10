@@ -1,7 +1,8 @@
 import React from 'react';
-import { IoIosArrowForward } from 'react-icons/io';
-import FormTambahKegiatan from '../../components/PPh 23/FormTambahKegiatan23';
 import { Link } from 'react-router-dom';
+import { IoIosArrowForward } from 'react-icons/io';
+
+import FormTambahKegiatan from '../../components/PPh 23/FormTambahKegiatan23';
 
 const TambahDataKegiatan: React.FC = () => {
   return (

@@ -3,6 +3,7 @@ import { FiMenu } from 'react-icons/fi';
 import { IoNotifications } from 'react-icons/io5';
 import { FaUser } from 'react-icons/fa';
 import { MdLogout } from 'react-icons/md';
+import { toast } from 'react-toastify';
 
 import logo from '../../assets/logo.svg';
 
@@ -20,12 +21,17 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   const token = localStorage.getItem('token');
 
   const handleLogout = () => {
+    sessionStorage.removeItem('namaPegawai');
+    sessionStorage.removeItem('selectedIdl');
+    sessionStorage.removeItem('namaSatker');
+
     document.cookie.split(';').forEach((c) => {
       document.cookie = c
         .replace(/^ +/, '')
         .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
     });
 
+    toast.success('Anda Telah Berhasil Logout!');
     window.location.href = '/';
   };
 

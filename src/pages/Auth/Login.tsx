@@ -4,6 +4,7 @@ import { useCookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
 
 import logo from '../../assets/logo.svg';
+import { toast } from 'react-toastify';
 
 interface JwtPayload {
   idl: string[];
@@ -39,20 +40,26 @@ const Login: React.FC = () => {
       if (response.ok) {
         const decodedToken = jwtDecode<JwtPayload>(data.result.access_token);
 
-        setCookie('access_token', decodedToken);
+        setCookie('access_token', data.result.access_token);
 
         if (decodedToken.idl.length === 1) {
+          const namaPegawai = decodedToken.nama_pegawai;
           const selectedIdl = decodedToken.idl[0];
-          setCookie('selected_idl', selectedIdl);
+          const namaSatker = decodedToken.nama_satker[0];
+          sessionStorage.setItem('namaPegawai', namaPegawai);
+          sessionStorage.setItem('selectedIdl', selectedIdl);
+          sessionStorage.setItem('namaSatker', namaSatker);
+          toast.success('Selamat Datang di Website OCA');
+
           navigate('/dashboard', {
             state: { selectedIdl: decodedToken.idl[0] },
           });
-        } else {
+        } else if (decodedToken.idl.length > 1) {
           navigate('/verifikasi', { state: decodedToken });
         }
       }
     } catch (error) {
-      console.error('Error during login:', error);
+      toast.error('User id atau password salah !!!');
     }
   };
 

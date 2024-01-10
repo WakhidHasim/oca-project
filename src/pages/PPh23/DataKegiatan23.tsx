@@ -7,7 +7,7 @@ import SearchBar from '../../components/Search/SearchBar';
 import { FaEdit } from 'react-icons/fa';
 import { FaPlus } from 'react-icons/fa6';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -62,6 +62,8 @@ interface WajibPajakBadanUsaha {
 }
 
 const DataKegiatan23: React.FC = () => {
+  const navigate = useNavigate();
+
   const [apiData, setApiData] = useState<ApiData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -76,10 +78,12 @@ const DataKegiatan23: React.FC = () => {
     return badanUsaha ? badanUsaha.namaBadan : 'Nama Badan Not Found';
   };
 
+  const selectedIdl = sessionStorage.getItem('selectedIdl') || '';
+
   const fetchData = async () => {
     try {
       const response = await fetch(
-        'http://localhost:3000/api/kegiatan-penghasilan-badan/pph23'
+        `http://localhost:3000/api/kegiatan-penghasilan-badan/pph23?idl=${selectedIdl}`
       );
 
       if (!response.ok) {
@@ -182,26 +186,27 @@ const DataKegiatan23: React.FC = () => {
     return formattedAmount;
   };
 
+  const handleEditClick = (kodeKegiatanBadan: string) => {
+    navigate(`/editKegiatan23`, { state: { kodeKegiatanBadan } });
+  };
+
   const ActionsButtons: React.FC<{ kodeKegiatanBadan: string }> = ({
     kodeKegiatanBadan,
   }) => (
     <div className='flex space-x-2 items-center text-white'>
-      <Link to='/editKegiatan23'>
-        <ButtonTabel
-          text='Edit'
-          icon={<FaEdit size={16} />}
-          bgColor='bg-orange'
-        />
-      </Link>
+      <ButtonTabel
+        text='Edit'
+        icon={<FaEdit size={16} />}
+        onClick={() => handleEditClick(kodeKegiatanBadan)}
+        bgColor='bg-orange'
+      />
 
-      <Link to=''>
-        <ButtonTabel
-          onClick={() => handleDelete(kodeKegiatanBadan)}
-          text='Hapus'
-          icon={<RiDeleteBin6Fill size={16} />}
-          bgColor='bg-delete'
-        />
-      </Link>
+      <ButtonTabel
+        onClick={() => handleDelete(kodeKegiatanBadan)}
+        text='Hapus'
+        icon={<RiDeleteBin6Fill size={16} />}
+        bgColor='bg-delete'
+      />
     </div>
   );
 

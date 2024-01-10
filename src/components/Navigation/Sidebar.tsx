@@ -10,14 +10,17 @@ import { Link, useLocation } from 'react-router-dom';
 const Sidebar: React.FC = () => {
   const location = useLocation();
 
+  const [namaPegawai, setNamaPegawai] = useState<string | null>(null);
+  const [namaSatker, setNamaSatker] = useState<string | null>(null);
+
   const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
   const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
 
-  const toggleDropdown1 = () => {
-    setIsDropdownOpen1(!isDropdownOpen1);
-    setIsDropdownOpen2(false);
-  };
+  // const toggleDropdown1 = () => {
+  //   setIsDropdownOpen1(!isDropdownOpen1);
+  //   setIsDropdownOpen2(false);
+  // };
 
   const toggleDropdown2 = () => {
     setIsDropdownOpen2(!isDropdownOpen2);
@@ -27,6 +30,14 @@ const Sidebar: React.FC = () => {
   const handleMenuClick = (menu: string) => {
     setSelectedMenu(menu);
   };
+
+  const storedNamaPegawai = sessionStorage.getItem('namaPegawai');
+  const storedNamaSatker = sessionStorage.getItem('namaSatker');
+
+  useEffect(() => {
+    setNamaPegawai(storedNamaPegawai);
+    setNamaSatker(storedNamaSatker);
+  }, []);
 
   useEffect(() => {
     setSelectedMenu(location.pathname);
@@ -38,15 +49,13 @@ const Sidebar: React.FC = () => {
         <div className='flex pl-4 justify-center items-center gap-3 mb-4'>
           <FaUserCircle size={37} />
           <div className='w-full mx-auto flex flex-col justify-end'>
-            <p className='text-[14px] font-semibold'>
-              Wiwi Widayani, S.Kom., M.Kom
-            </p>
+            <p className='text-[14px] font-semibold'>{namaPegawai}</p>
             <span className='text-xs pt-1'>Agent</span>
           </div>
         </div>
 
         <span className='text-xs flex gap-2 w-full py-2 pl-8 '>
-          Direktorat Perencanaan dan Keuangan
+          {namaSatker}
         </span>
 
         {/* Dropdown 1 */}
