@@ -30,7 +30,20 @@ const FormTambahKegiatan: React.FC = () => {
     { value: string; label: string }[]
   >([]);
 
-  const optionsPencairanPenghasilan = [{ value: 'dpk', label: 'DPK' }];
+  const selectedIdl = sessionStorage.getItem('selectedIdl') || '';
+  const namaSatker = sessionStorage.getItem('namaSatker') || '';
+
+  const optionsPencairanPenghasilan = [
+    { value: '233.03', label: 'DPK-Direktorat Perencanaan dan Keuangan' },
+    { value: selectedIdl, label: namaSatker },
+  ];
+
+  const [errors, setErrors] = useState({
+    uraianKegiatan: '',
+    kodeJenisPenghasilan: '',
+    idKegiatanAnggaran: '',
+    picPencairanPenghasilan: '',
+  });
 
   const [formData, setFormData] = useState({
     uraianKegiatan: '',
@@ -38,49 +51,50 @@ const FormTambahKegiatan: React.FC = () => {
     kodeJenisPenghasilan: 0,
     picPencairanPenghasilan: '',
     mintaBillingSendiri: false,
+    idl: selectedIdl,
   });
 
+  const fetchJenisPenghasilanOptions = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/jenis-penghasilan/pph21`
+      );
+      const data = await response.json();
+      if (data && data.result && data.result.length > 0) {
+        const optionsjenisPenghasilan = data.result.map(
+          (objek: JenisPenghasilan) => ({
+            value: objek.kodeJenisPenghasilan.toString(),
+            label: objek.jenisPenghasilan,
+          })
+        );
+        setOptionsjenisPenghasilan(optionsjenisPenghasilan);
+      }
+    } catch (error) {
+      console.error('Error fetching Jenis Penghasilan options:', error);
+    }
+  };
+
+  const fetchPengajuanAnggaranOptions = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/pengajuan-anggaran`
+      );
+      const data = await response.json();
+      if (data && data.result && data.result.length > 0) {
+        const optionsPengajuanAnggaran = data.result.map(
+          (objek: PengajuanAnggaran) => ({
+            value: objek.idKegiatanAnggaran,
+            label: objek.noPengajuan + ' - ' + objek.kegiatan,
+          })
+        );
+        setOptionsPengajuanAnggaran(optionsPengajuanAnggaran);
+      }
+    } catch (error) {
+      console.error('Error fetching Objek Pajak options:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchJenisPenghasilanOptions = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/jenis-penghasilan-pph23`
-        );
-        const data = await response.json();
-        if (data && data.result && data.result.length > 0) {
-          const optionsjenisPenghasilan = data.result.map(
-            (objek: JenisPenghasilan) => ({
-              value: objek.kodeJenisPenghasilan,
-              label: objek.jenisPenghasilan,
-            })
-          );
-          setOptionsjenisPenghasilan(optionsjenisPenghasilan);
-        }
-      } catch (error) {
-        console.error('Error fetching Objek Pajak options:', error);
-      }
-    };
-
-    const fetchPengajuanAnggaranOptions = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/pengajuan-anggaran`
-        );
-        const data = await response.json();
-        if (data && data.result && data.result.length > 0) {
-          const optionsPengajuanAnggaran = data.result.map(
-            (objek: PengajuanAnggaran) => ({
-              value: objek.idKegiatanAnggaran,
-              label: objek.noPengajuan + ' - ' + objek.kegiatan,
-            })
-          );
-          setOptionsPengajuanAnggaran(optionsPengajuanAnggaran);
-        }
-      } catch (error) {
-        console.error('Error fetching Objek Pajak options:', error);
-      }
-    };
-
     fetchPengajuanAnggaranOptions();
     fetchJenisPenghasilanOptions();
   }, []);
@@ -88,16 +102,52 @@ const FormTambahKegiatan: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    if (!formData.uraianKegiatan) {
+      newErrors.uraianKegiatan = 'Uraian Kegiatan harus diisi';
+      isValid = false;
+    } else {
+      newErrors.uraianKegiatan = '';
+    }
+
+    if (!formData.kodeJenisPenghasilan) {
+      newErrors.kodeJenisPenghasilan = 'Jenis Penghasilan harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.kodeJenisPenghasilan = '';
+    }
+
+    if (!formData.idKegiatanAnggaran) {
+      newErrors.idKegiatanAnggaran = 'Pengajuan Anggaran harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.idKegiatanAnggaran = '';
+    }
+
+    if (!formData.picPencairanPenghasilan) {
+      newErrors.picPencairanPenghasilan =
+        'PIC Pencairan Penghasilan harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.picPencairanPenghasilan = '';
+    }
+
+    if (!isValid) {
+      setErrors(newErrors);
+      return;
+    }
+
     try {
-      const response = await axios.post(
-        'http://localhost:3000/api/kegiatan-penghasilan-orang-pribadi',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const url =
+        'http://localhost:3000/api/kegiatan-penghasilan-orang-pribadi';
+
+      const response = await axios.post(url, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (response.status === 200 && response.data) {
         const responseData = response.data;
@@ -111,7 +161,6 @@ const FormTambahKegiatan: React.FC = () => {
             ...formData,
           });
 
-          console.log(setFormData);
           toast.success('Data added successfully!');
           navigate('/dataKegiatan21');
         }
@@ -145,11 +194,16 @@ const FormTambahKegiatan: React.FC = () => {
               if (selectedOption) {
                 setFormData({
                   ...formData,
-                  kodeJenisPenghasilan: selectedOption.value,
+                  kodeJenisPenghasilan: Number(selectedOption.value),
                 });
               }
             }}
           />
+          {errors.kodeJenisPenghasilan && (
+            <p className='text-red-500 text-sm'>
+              {errors.kodeJenisPenghasilan}
+            </p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -164,8 +218,6 @@ const FormTambahKegiatan: React.FC = () => {
           </p>
           <input
             type='text'
-            id='uraian'
-            name='uraianKegiatan'
             className='w-full p-2 mt-2 border rounded-md text-sm '
             onChange={(e) =>
               setFormData({
@@ -174,6 +226,9 @@ const FormTambahKegiatan: React.FC = () => {
               })
             }
           />
+          {errors.uraianKegiatan && (
+            <p className='text-red-500 text-sm'>{errors.uraianKegiatan}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -197,6 +252,9 @@ const FormTambahKegiatan: React.FC = () => {
               }
             }}
           />
+          {errors.idKegiatanAnggaran && (
+            <p className='text-red-500 text-sm'>{errors.idKegiatanAnggaran}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -209,7 +267,22 @@ const FormTambahKegiatan: React.FC = () => {
             isSearchable
             isClearable
             placeholder='Pilih PIC (Pencairan Penghasilan)'
+            onChange={(
+              selectedOption: SingleValue<{ value: string; label: string }>
+            ) => {
+              if (selectedOption) {
+                setFormData({
+                  ...formData,
+                  picPencairanPenghasilan: selectedOption.value,
+                });
+              }
+            }}
           />
+          {errors.picPencairanPenghasilan && (
+            <p className='text-red-500 text-sm'>
+              {errors.picPencairanPenghasilan}
+            </p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -222,8 +295,6 @@ const FormTambahKegiatan: React.FC = () => {
               <input
                 type='radio'
                 id='billingYa'
-                name='mintaBillingSendiri'
-                value='true'
                 className='mr-2'
                 onChange={() =>
                   setFormData({ ...formData, mintaBillingSendiri: true })
@@ -235,8 +306,7 @@ const FormTambahKegiatan: React.FC = () => {
               <input
                 type='radio'
                 id='billingTidak'
-                name='mintaBillingSendiri'
-                value='false'
+                checked={formData.mintaBillingSendiri === false}
                 className='mr-2'
                 onChange={() =>
                   setFormData({ ...formData, mintaBillingSendiri: false })

@@ -9,7 +9,7 @@ import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { TbListDetails } from 'react-icons/tb';
 import { FaPlus } from 'react-icons/fa6';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -42,6 +42,8 @@ interface PengajuanAnggaran {
 }
 
 const DataKegiatanPPh21: React.FC = () => {
+  const navigate = useNavigate();
+
   const [apiData, setApiData] = useState<ApiData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -154,6 +156,10 @@ const DataKegiatanPPh21: React.FC = () => {
     });
   };
 
+  const handleEditClick = (kodeKegiatanOP: string) => {
+    navigate(`/dataKegiatan21/editKegiatan21`, { state: { kodeKegiatanOP } });
+  };
+
   const ActionsButtons: React.FC<{ kodeKegiatanOP: string }> = ({
     kodeKegiatanOP,
   }) => (
@@ -162,10 +168,11 @@ const DataKegiatanPPh21: React.FC = () => {
         <ButtonTabel
           text='Penerima'
           icon={<TbListDetails size={16} />}
+          onClick={() => handleEditClick(kodeKegiatanOP)}
           bgColor='bg-detail'
         />
       </Link>
-      <Link to='/editKegiatan21'>
+      <Link to='/dataKegiatan21/editKegiatan21'>
         <ButtonTabel
           text='Edit'
           icon={<FaEdit size={16} />}
@@ -214,7 +221,7 @@ const DataKegiatanPPh21: React.FC = () => {
           <div className='w-full mx-auto p-5 rounded'>
             <div className='flex flex-col md:flex-row py-3 justify-between'>
               <div className='flex md:flex-row flex-col items-center'>
-                <Link to='/tambahKegiatan21'>
+                <Link to='/dataKegiatan21/tambahKegiatan21'>
                   <ButtonTabel
                     text='Tambah Data'
                     icon={<FaPlus size={16} />}

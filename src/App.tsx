@@ -103,7 +103,7 @@ function App(): JSX.Element {
         />
 
         <Route
-          path='/tambahKegiatan21'
+          path='/dataKegiatan21/tambahKegiatan21'
           element={
             <Layout>
               <TambahData />
@@ -112,7 +112,7 @@ function App(): JSX.Element {
         />
 
         <Route
-          path='/editKegiatan21'
+          path='/dataKegiatan21/editKegiatan21'
           element={
             <Layout>
               <EditKegiatan />
@@ -233,7 +233,7 @@ function App(): JSX.Element {
 
         {/* WPOP */}
         <Route
-          path='/dataWPOP'
+          path='/registerWP/dataWPOP'
           element={
             <Layout>
               <DataWPOP />
@@ -260,7 +260,7 @@ function App(): JSX.Element {
 
         {/* WPBU */}
         <Route
-          path='/dataWPBU'
+          path='/registerWP/dataWPBU'
           element={
             <Layout>
               <DataWPBU />

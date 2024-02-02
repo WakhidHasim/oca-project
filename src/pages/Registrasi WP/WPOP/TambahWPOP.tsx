@@ -13,14 +13,14 @@ const TambahWPOP: React.FC = () => {
             Tambah Data Registrasi WPOP
           </h1>
           <ol className='list-none inline-flex text-xs md:text-sm'>
-            <Link to='/dataWPOP'>
+            <Link to='//registerWP/dataWPOP'>
               <li className='flex items-center  '>
                 <p className='text-gray-800'>Registrasi WPOP</p>
                 <IoIosArrowForward className='fill-current w-3 h-3 mx-3' />
               </li>
             </Link>
 
-            <Link to='/dataWPOP'>
+            <Link to='//registerWP/dataWPOP'>
               <li className='flex items-center  '>
                 <p className='text-gray-800'>Data Registrasi WPOP</p>
                 <IoIosArrowForward className='fill-current w-3 h-3 mx-3' />

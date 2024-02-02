@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Select, { SingleValue } from 'react-select';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FaEdit } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { IoIosSave } from 'react-icons/io';
 import { IoArrowUndoSharp } from 'react-icons/io5';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -41,7 +41,7 @@ interface ObjekPajak {
 }
 
 interface BadanUsaha {
-  kodeWPBadan: string;
+  kodeWajibPajakBadanUsaha: string;
   namaBadan: string;
   email: string;
   npwp: string;
@@ -61,10 +61,8 @@ interface BadanUsaha {
   statusPkp: string;
 }
 
-const FormEditKegiatan23: React.FC = () => {
+const FormTambahKegaiatn4: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const kodeKegiatanBadan = location?.state?.kodeKegiatanBadan || '';
 
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
   const [fakturPajakFile, setFakturPajakFile] = useState<File | null>(null);
@@ -83,6 +81,7 @@ const FormEditKegiatan23: React.FC = () => {
   const [optionsPengajuanAnggaran, setOptionsPengajuanAnggaran] = useState<
     { value: string; label: string }[]
   >([]);
+
   const selectedIdl = sessionStorage.getItem('selectedIdl') || '';
   const namaSatker = sessionStorage.getItem('namaSatker') || '';
 
@@ -100,31 +99,30 @@ const FormEditKegiatan23: React.FC = () => {
     null
   );
 
-  const [selectedJenisPenghasilan, setSelectedJenisPenghasilan] =
-    useState<number>(0);
-
-  const [selectedPengajuanAnggaran, setSelectedPengajuanAnggaran] =
-    useState<string>('');
-
-  const [selectedBadanUsahaValue, setSelectedBadanUsahaValue] =
-    useState<string>('');
-
-  const [selectedObjekPajakValue, setSelectedObjekPajakValue] =
-    useState<string>('');
-
-  const [selectedPICValue, setSelectedPICValue] = useState<string>('');
+  const [errors, setErrors] = useState({
+    uraianKegiatan: '',
+    idKegiatanAnggaran: '',
+    kodeJenisPenghasilan: '',
+    picPencairanPenghasilan: '',
+    kodeWajibPajakBadanUsaha: '',
+    penghasilanBruto: '',
+    kodeObjek: '',
+    invoice: '',
+    dokumenKerjasamaKegiatan: '',
+  });
 
   const [formData, setFormData] = useState({
     uraianKegiatan: '',
     idKegiatanAnggaran: '',
     kodeJenisPenghasilan: '',
-    pic: '',
-    kodeWPBadan: '',
+    picPencairanPenghasilan: '',
+    kodeWajibPajakBadanUsaha: '',
     penghasilanBruto: '',
     kodeObjek: '',
     invoice: '',
     fakturPajak: '',
     dokumenKerjasamaKegiatan: '',
+    idl: '',
   });
 
   const handleFileUpload = (
@@ -152,20 +150,19 @@ const FormEditKegiatan23: React.FC = () => {
           setDokumenKerjasamaFile(file);
           setFormData({
             ...formData,
-            dokumenKerjasamaKegiatan: file.name,
+            dokumenKerjasamaKegiatan: file.name, // Menyimpan hanya nama file
           });
           break;
         default:
           break;
       }
-      console.log(`${fileType} uploaded:`, file.name);
     }
   };
 
   const fetchJenisPenghasilanOptions = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/jenis-penghasilan/pph23`
+        `http://localhost:3000/api/jenis-penghasilan/pph4-ayat-2`
       );
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
@@ -205,7 +202,7 @@ const FormEditKegiatan23: React.FC = () => {
   const fetchObjekPajakOptions = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/objek-pajak/pph23`
+        `http://localhost:3000/api/objek-pajak/pph4-ayat-2`
       );
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
@@ -229,7 +226,7 @@ const FormEditKegiatan23: React.FC = () => {
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsBadanUsaha = data.result.map((objek: BadanUsaha) => ({
-          value: objek.kodeWPBadan,
+          value: objek.kodeWajibPajakBadanUsaha,
           label: objek.namaBadan,
           npwp: objek.npwp,
           noRekening: objek.noRekening,
@@ -249,42 +246,6 @@ const FormEditKegiatan23: React.FC = () => {
     fetchObjekPajakOptions();
     fetchBadanUsahaOptions();
   }, []);
-
-  useEffect(() => {
-    const fetchPPh23 = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/kegiatan-penghasilan-badan/pph23/${kodeKegiatanBadan}`
-        );
-        const data = await response.json();
-
-        setSelectedJenisPenghasilan(
-          data.result.kodeJenisPenghasilan.toString()
-        );
-        setSelectedPengajuanAnggaran(data.result.idKegiatanAnggaran);
-        setSelectedBadanUsahaValue(data.result.kodeWPBadan);
-        setSelectedObjekPajakValue(data.result.kodeObjek);
-        setSelectedPICValue(data.result.pic);
-
-        setFormData({
-          uraianKegiatan: data.result.uraianKegiatan,
-          idKegiatanAnggaran: data.result.idKegiatanAnggaran,
-          kodeJenisPenghasilan: data.result.kodeJenisPenghasilan.toString(),
-          pic: data.result.pic,
-          kodeWPBadan: data.result.kodeWPBadan,
-          penghasilanBruto: data.result.penghasilanBruto.toString(),
-          kodeObjek: data.result.kodeObjek,
-          invoice: data.result.invoice,
-          fakturPajak: data.result.fakturPajak,
-          dokumenKerjasamaKegiatan: data.result.dokumenKerjasamaKegiatan,
-        });
-      } catch (error) {
-        console.error('Error fetching Badan Usaha options:', error);
-      }
-    };
-
-    fetchPPh23();
-  }, [kodeKegiatanBadan]);
 
   const handlePenghasilanBrutoChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -320,9 +281,82 @@ const FormEditKegiatan23: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    if (!formData.uraianKegiatan) {
+      newErrors.uraianKegiatan = 'Uraian Kegiatan harus diisi';
+      isValid = false;
+    } else {
+      newErrors.uraianKegiatan = '';
+    }
+
+    if (!formData.kodeJenisPenghasilan) {
+      newErrors.kodeJenisPenghasilan = 'Jenis Penghasilan harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.kodeJenisPenghasilan = '';
+    }
+
+    if (!formData.idKegiatanAnggaran) {
+      newErrors.idKegiatanAnggaran = 'Pengajuan Anggaran harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.idKegiatanAnggaran = '';
+    }
+
+    if (!formData.kodeWajibPajakBadanUsaha) {
+      newErrors.kodeWajibPajakBadanUsaha = 'Nama Badan Usaha harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.kodeWajibPajakBadanUsaha = '';
+    }
+
+    if (!formData.kodeObjek) {
+      newErrors.kodeObjek = 'Objek Pajak harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.kodeObjek = '';
+    }
+
+    if (!formData.penghasilanBruto) {
+      newErrors.penghasilanBruto = 'Penghasilan Bruto harus diisi';
+      isValid = false;
+    } else {
+      newErrors.penghasilanBruto = '';
+    }
+
+    if (!formData.picPencairanPenghasilan) {
+      newErrors.picPencairanPenghasilan =
+        'PIC Pencairan Penghasilan harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.picPencairanPenghasilan = '';
+    }
+
+    if (!formData.invoice) {
+      newErrors.invoice = 'Invoice harus diisi';
+      isValid = false;
+    } else {
+      newErrors.invoice = '';
+    }
+
+    if (!formData.dokumenKerjasamaKegiatan) {
+      newErrors.dokumenKerjasamaKegiatan =
+        'Dokumen Kerjasama Kegiatan harus diisi';
+      isValid = false;
+    } else {
+      newErrors.dokumenKerjasamaKegiatan = '';
+    }
+
+    if (!isValid) {
+      setErrors(newErrors);
+      return;
+    }
+
     try {
       const formDataToSubmit = new FormData();
-      formDataToSubmit.append('kodeKegiatanBadan', kodeKegiatanBadan);
       formDataToSubmit.append('uraianKegiatan', formData.uraianKegiatan);
       formDataToSubmit.append(
         'idKegiatanAnggaran',
@@ -332,8 +366,14 @@ const FormEditKegiatan23: React.FC = () => {
         'kodeJenisPenghasilan',
         formData.kodeJenisPenghasilan
       );
-      formDataToSubmit.append('pic', formData.pic);
-      formDataToSubmit.append('kodeWPBadan', formData.kodeWPBadan);
+      formDataToSubmit.append(
+        'picPencairanPenghasilan',
+        formData.picPencairanPenghasilan
+      );
+      formDataToSubmit.append(
+        'kodeWajibPajakBadanUsaha',
+        formData.kodeWajibPajakBadanUsaha
+      );
       formDataToSubmit.append('penghasilanBruto', formData.penghasilanBruto);
       formDataToSubmit.append('kodeObjek', formData.kodeObjek);
       formDataToSubmit.append('invoice', invoiceFile ? invoiceFile : '');
@@ -345,13 +385,15 @@ const FormEditKegiatan23: React.FC = () => {
         'dokumenKerjasamaKegiatan',
         dokumenKerjasamaFile ? dokumenKerjasamaFile : ''
       );
+      formDataToSubmit.append('idl', selectedIdl);
 
-      const url = `http://localhost:3000/api/kegiatan-penghasilan-badan/pph23/${kodeKegiatanBadan}`;
-      const response = await axios.put(url, formDataToSubmit, {
+      const url = 'http://localhost:3000/api/kegiatan-penghasilan-badan/pph4';
+      const response = await axios.post(url, formDataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+
       // Handle response
       if (response.status === 200 && response.data) {
         const responseData = response.data;
@@ -364,7 +406,7 @@ const FormEditKegiatan23: React.FC = () => {
             ...formData,
           });
           toast.success('Data added successfully!');
-          navigate('/dataKegiatan23');
+          navigate('/kegiatanPPh4');
         }
       }
     } catch (error) {
@@ -389,9 +431,6 @@ const FormEditKegiatan23: React.FC = () => {
             isSearchable
             isClearable
             placeholder='Pilih Jenis Penghasilan'
-            value={optionsjenisPenghasilan.find(
-              (option) => option.value === selectedJenisPenghasilan
-            )}
             onChange={(
               selectedOption: SingleValue<{ value: number; label: string }>
             ) => {
@@ -400,10 +439,14 @@ const FormEditKegiatan23: React.FC = () => {
                   ...formData,
                   kodeJenisPenghasilan: selectedOption.value.toString(),
                 });
-                setSelectedJenisPenghasilan(selectedOption.value);
               }
             }}
           />
+          {errors.kodeJenisPenghasilan && (
+            <p className='text-red-500 text-sm'>
+              {errors.kodeJenisPenghasilan}
+            </p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -418,9 +461,6 @@ const FormEditKegiatan23: React.FC = () => {
           </p>
           <input
             type='text'
-            id='uraianKegiatan'
-            name='uraianKegiatan'
-            value={formData.uraianKegiatan}
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -429,6 +469,9 @@ const FormEditKegiatan23: React.FC = () => {
             }
             className='w-full p-2 mt-2 border rounded-md text-sm'
           />
+          {errors.uraianKegiatan && (
+            <p className='text-red-500 text-sm'>{errors.uraianKegiatan}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -441,24 +484,20 @@ const FormEditKegiatan23: React.FC = () => {
             isSearchable
             isClearable
             placeholder='Pilih Pengajuan Anggaran'
-            value={optionsPengajuanAnggaran.find(
-              (option) => option.value === selectedPengajuanAnggaran
-            )}
             onChange={(
-              selectedOption: SingleValue<{
-                value: string;
-                label: string;
-              }> | null
+              selectedOption: SingleValue<{ value: string; label: string }>
             ) => {
               if (selectedOption) {
                 setFormData({
                   ...formData,
                   idKegiatanAnggaran: selectedOption.value,
                 });
-                setSelectedPengajuanAnggaran(selectedOption.value);
               }
             }}
           />
+          {errors.idKegiatanAnggaran && (
+            <p className='text-red-500 text-sm'>{errors.idKegiatanAnggaran}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -472,26 +511,28 @@ const FormEditKegiatan23: React.FC = () => {
             isSearchable
             isClearable
             placeholder='Pilih Badan Usaha'
-            value={optionsBadanUsaha.find(
-              (option) => option.value === selectedBadanUsahaValue
-            )}
             onChange={(
               selectedOption: SingleValue<{ value: string; label: string }>
             ) => {
               if (selectedOption) {
                 setFormData({
                   ...formData,
-                  kodeWPBadan: selectedOption.value,
+                  kodeWajibPajakBadanUsaha: selectedOption.value,
                 });
                 const selectedBadan = optionsBadanUsaha.find(
                   (objek: { value: string; label: string }) =>
                     objek.value === selectedOption.value
                 ) as SelectedBadanUsaha;
+
                 setSelectedBadanUsaha(selectedBadan);
-                setSelectedBadanUsahaValue(selectedOption.value);
               }
             }}
           />
+          {errors.kodeWajibPajakBadanUsaha && (
+            <p className='text-red-500 text-sm'>
+              {errors.kodeWajibPajakBadanUsaha}
+            </p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -530,9 +571,6 @@ const FormEditKegiatan23: React.FC = () => {
             isSearchable
             isClearable
             placeholder='Pilih Objek Pajak'
-            value={optionsObjekPajak.find(
-              (option) => option.value === selectedObjekPajakValue
-            )}
             onChange={(
               selectedOption: SingleValue<{ value: string; label: string }>
             ) => {
@@ -550,6 +588,9 @@ const FormEditKegiatan23: React.FC = () => {
               }
             }}
           />
+          {errors.kodeObjek && (
+            <p className='text-red-500 text-sm'>{errors.kodeObjek}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -560,10 +601,12 @@ const FormEditKegiatan23: React.FC = () => {
           <input
             type='number'
             id='penghasilanBruto'
-            value={formData.penghasilanBruto}
             onChange={handlePenghasilanBrutoChange}
             className='w-full p-2 border rounded-md mt-2 text-sm'
           />
+          {errors.penghasilanBruto && (
+            <p className='text-red-500 text-sm'>{errors.penghasilanBruto}</p>
+          )}
         </div>
         <div className='mb-5 relative'>
           <label className='inline-block font-semibold text-base mb-2'>
@@ -615,22 +658,22 @@ const FormEditKegiatan23: React.FC = () => {
             isSearchable
             isClearable
             placeholder='Pilih PIC (Pencairan Penghasilan)'
-            value={optionsPencairanPenghasilan.find(
-              (option) => option.value === selectedPICValue
-            )}
             onChange={(
               selectedOption: SingleValue<{ value: string; label: string }>
             ) => {
               if (selectedOption) {
                 setFormData({
                   ...formData,
-                  pic: selectedOption.value,
+                  picPencairanPenghasilan: selectedOption.value,
                 });
-
-                setSelectedPICValue(selectedOption.value);
               }
             }}
           />
+          {errors.picPencairanPenghasilan && (
+            <p className='text-red-500 text-sm'>
+              {errors.picPencairanPenghasilan}
+            </p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -644,6 +687,9 @@ const FormEditKegiatan23: React.FC = () => {
             className='w-full p-2 border rounded-md text-sm mt-2'
             onChange={(e) => handleFileUpload(e, 'invoice')}
           />
+          {errors.invoice && (
+            <p className='text-red-500 text-sm'>{errors.invoice}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -668,6 +714,11 @@ const FormEditKegiatan23: React.FC = () => {
             className='w-full p-2 border rounded-md text-sm mt-2'
             onChange={(e) => handleFileUpload(e, 'dokumenKerjasamaKegiatan')}
           />
+          {errors.dokumenKerjasamaKegiatan && (
+            <p className='text-red-500 text-sm'>
+              {errors.dokumenKerjasamaKegiatan}
+            </p>
+          )}
         </div>
         <div className='flex gap-5 justify-start pt-8 text-white '>
           <Link to='/dataKegiatan23'>
@@ -680,13 +731,13 @@ const FormEditKegiatan23: React.FC = () => {
 
           <ButtonTabel
             type='submit'
-            text='Edit'
-            icon={<FaEdit size={16} />}
-            bgColor='bg-orange'
+            text='Simpan'
+            icon={<IoIosSave size={16} />}
+            bgColor='bg-tambah-data'
           />
         </div>
       </form>
     </div>
   );
 };
-export default FormEditKegiatan23;
+export default FormTambahKegaiatn4;

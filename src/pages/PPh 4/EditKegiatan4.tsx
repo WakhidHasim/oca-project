@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
-import FormEditKegiatan from '../../components/PPh 4/FormEditKegiatan';
+import FormEditKegiatan from '../../components/PPh 4/FormEditKegiatan4';
 import { Link } from 'react-router-dom';
 
 const EditKegiatan4: React.FC = () => {

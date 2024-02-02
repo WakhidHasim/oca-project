@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import Select, { SingleValue } from 'react-select';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaEdit } from 'react-icons/fa';
 import { IoArrowUndoSharp } from 'react-icons/io5';
 
@@ -18,8 +18,9 @@ interface JenisPenghasilan {
 }
 
 const FormEditKegiatan: React.FC = () => {
-  const { kodeKegiatanBadan } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const kodeKegiatanOP = location?.state?.kodeKegiatanOP || '';
 
   const [, setBilling] = useState<string>('');
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -32,24 +33,76 @@ const FormEditKegiatan: React.FC = () => {
     { value: string; label: string }[]
   >([]);
 
-  const optionsPencairanPenghasilan = [{ value: 'dpk', label: 'DPK' }];
+  const selectedIdl = sessionStorage.getItem('selectedIdl') || '';
+  const namaSatker = sessionStorage.getItem('namaSatker') || '';
 
-  const [kegiatanData, setKegiatanData] = useState({
-    uraianKegiatan: '',
-    idKegiatanAnggaran: '',
-    kodeJenisPenghasilan: 0,
-    picPencairanPenghasilan: '',
-    mintaBillingSendiri: false,
-  });
+  const optionsPencairanPenghasilan = [
+    { value: '233.03', label: 'DPK-Direktorat Perencanaan dan Keuangan' },
+    { value: selectedIdl, label: namaSatker },
+  ];
+
+  const [selectedJenisPenghasilan, setSelectedJenisPenghasilan] =
+    useState<number>(0);
+
+  const [selectedPengajuanAnggaran, setSelectedPengajuanAnggaran] =
+    useState<string>('');
+
+  const [selectedPICValue, setSelectedPICValue] = useState<string>('');
 
   const [formData, setFormData] = useState({
-    kodeKegiatanOP: '',
     uraianKegiatan: '',
     idKegiatanAnggaran: '',
     kodeJenisPenghasilan: 0,
     picPencairanPenghasilan: '',
     mintaBillingSendiri: false,
   });
+
+  const fetchJenisPenghasilanOptions = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/jenis-penghasilan/pph21`
+      );
+      const data = await response.json();
+      if (data && data.result && data.result.length > 0) {
+        const optionsjenisPenghasilan = data.result.map(
+          (objek: JenisPenghasilan) => ({
+            value: objek.kodeJenisPenghasilan,
+            label: objek.jenisPenghasilan,
+          })
+        );
+        setOptionsjenisPenghasilan(optionsjenisPenghasilan);
+      }
+    } catch (error) {
+      console.error('Error fetching Jenis Penghasilan options:', error);
+    }
+  };
+
+  const fetchPengajuanAnggaranOptions = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/pengajuan-anggaran`
+      );
+      const data = await response.json();
+      if (data && data.result && data.result.length > 0) {
+        const optionsPengajuanAnggaran = data.result.map(
+          (objek: PengajuanAnggaran) => ({
+            value: objek.idKegiatanAnggaran,
+            label: objek.noPengajuan + ' - ' + objek.kegiatan,
+          })
+        );
+        setOptionsPengajuanAnggaran(optionsPengajuanAnggaran);
+      }
+    } catch (error) {
+      console.error('Error fetching Pengajuan Anggaran options:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPengajuanAnggaranOptions();
+    fetchJenisPenghasilanOptions();
+  }, []);
+
+  console.log(kodeKegiatanOP);
 
   useEffect(() => {
     const fetchKegiatanPenghasilanOrangPribadi = async () => {
@@ -59,73 +112,22 @@ const FormEditKegiatan: React.FC = () => {
         );
         const data = await response.json();
 
-        if (data && data.result) {
-          const kegiatan = data.result[0];
+        // setSelectedJenisPenghasilan(data.result.kodeJenisPenghasilan);
 
-          setKegiatanData({
-            uraianKegiatan: kegiatan.uraianKegiatan,
-            idKegiatanAnggaran: kegiatan.idKegiatanAnggaran,
-            kodeJenisPenghasilan: kegiatan.kodeJenisPenghasilan,
-            picPencairanPenghasilan: kegiatan.picPencairanPenghasilan,
-            mintaBillingSendiri: kegiatan.mintaBillingSendiri,
-          });
+        // setSelectedPengajuanAnggaran(data.result.idKegiatanAnggaran);
 
-          setFormData({
-            kodeKegiatanOP: kegiatan.kodeKegiatanOP,
-            uraianKegiatan: kegiatan.uraianKegiatan,
-            idKegiatanAnggaran: kegiatan.idKegiatanAnggaran,
-            kodeJenisPenghasilan: kegiatan.kodeJenisPenghasilan,
-            picPencairanPenghasilan: kegiatan.picPencairanPenghasilan,
-            mintaBillingSendiri: kegiatan.mintaBillingSendiri,
-          });
-        }
+        setFormData({
+          uraianKegiatan: data.result.uraianKegiatan,
+          idKegiatanAnggaran: data.result.idKegiatanAnggaran,
+          kodeJenisPenghasilan: data.result.kodeJenisPenghasilan,
+          picPencairanPenghasilan: data.result.picPencairanPenghasilan,
+          mintaBillingSendiri: data.result.mintaBillingSendiri,
+        });
       } catch (error) {
         console.error('Error fetching kegiatan data:', error);
       }
     };
 
-    const fetchJenisPenghasilanOptions = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/jenis-penghasilan-pph23`
-        );
-        const data = await response.json();
-        if (data && data.result && data.result.length > 0) {
-          const optionsjenisPenghasilan = data.result.map(
-            (objek: JenisPenghasilan) => ({
-              value: objek.kodeJenisPenghasilan,
-              label: objek.jenisPenghasilan,
-            })
-          );
-          setOptionsjenisPenghasilan(optionsjenisPenghasilan);
-        }
-      } catch (error) {
-        console.error('Error fetching Jenis Penghasilan options:', error);
-      }
-    };
-
-    const fetchPengajuanAnggaranOptions = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/pengajuan-anggaran`
-        );
-        const data = await response.json();
-        if (data && data.result && data.result.length > 0) {
-          const optionsPengajuanAnggaran = data.result.map(
-            (objek: PengajuanAnggaran) => ({
-              value: objek.idKegiatanAnggaran,
-              label: objek.noPengajuan + ' - ' + objek.kegiatan,
-            })
-          );
-          setOptionsPengajuanAnggaran(optionsPengajuanAnggaran);
-        }
-      } catch (error) {
-        console.error('Error fetching Pengajuan Anggaran options:', error);
-      }
-    };
-
-    fetchPengajuanAnggaranOptions();
-    fetchJenisPenghasilanOptions();
     fetchKegiatanPenghasilanOrangPribadi();
   }, [kodeKegiatanOP]);
 
@@ -173,15 +175,6 @@ const FormEditKegiatan: React.FC = () => {
 
       if (data.status && data.status.code === 200) {
         console.log('Data updated:', data.result);
-
-        setKegiatanData({
-          uraianKegiatan: data.result.uraianKegiatan,
-          idKegiatanAnggaran: data.result.idKegiatanAnggaran,
-          kodeJenisPenghasilan: data.result.kodeJenisPenghasilan,
-          picPencairanPenghasilan: data.result.picPencairanPenghasilan,
-          mintaBillingSendiri: data.result.mintaBillingSendiri,
-        });
-
         navigate('/dataKegiatan21');
       } else {
         console.error('Error updating data:', data.status.description);
@@ -205,14 +198,19 @@ const FormEditKegiatan: React.FC = () => {
             isClearable
             placeholder='Pilih Jenis Penghasilan'
             value={optionsjenisPenghasilan.find(
-              (option) => option.value === kegiatanData.kodeJenisPenghasilan
+              (option) => option.value === selectedJenisPenghasilan
             )}
-            onChange={(selectedOption) =>
-              setKegiatanData((prevData) => ({
-                ...prevData,
-                kodeJenisPenghasilan: selectedOption?.value || 0,
-              }))
-            }
+            onChange={(
+              selectedOption: SingleValue<{ value: number; label: string }>
+            ) => {
+              if (selectedOption) {
+                setFormData({
+                  ...formData,
+                  kodeJenisPenghasilan: selectedOption.value,
+                });
+                setSelectedJenisPenghasilan(selectedOption.value);
+              }
+            }}
           />
         </div>
 
@@ -228,16 +226,16 @@ const FormEditKegiatan: React.FC = () => {
           </p>
           <input
             type='text'
-            id='uraian'
-            name='uraian'
-            value={kegiatanData.uraianKegiatan}
+            id='uraianKegiatan'
+            name='uraianKegiatan'
+            value={formData.uraianKegiatan}
             onChange={(e) =>
-              setKegiatanData((prevData) => ({
-                ...prevData,
+              setFormData({
+                ...formData,
                 uraianKegiatan: e.target.value,
-              }))
+              })
             }
-            className='w-full p-2 mt-2 border rounded-md text-sm '
+            className='w-full p-2 mt-2 border rounded-md text-sm'
           />
         </div>
 
@@ -251,12 +249,29 @@ const FormEditKegiatan: React.FC = () => {
             isSearchable
             isClearable
             placeholder='Pilih Pengajuan Anggaran'
+            value={optionsPengajuanAnggaran.find(
+              (option) => option.value === selectedPengajuanAnggaran
+            )}
+            onChange={(
+              selectedOption: SingleValue<{
+                value: string;
+                label: string;
+              }> | null
+            ) => {
+              if (selectedOption) {
+                setFormData({
+                  ...formData,
+                  idKegiatanAnggaran: selectedOption.value,
+                });
+                setSelectedPengajuanAnggaran(selectedOption.value);
+              }
+            }}
           />
         </div>
 
         <div className='mb-5 relative'>
           <label className='inline-block font-semibold text-base mb-2'>
-            PIC (Pencairan Penghasilan)
+            PIC (Pencaiiran Penghasilan)
           </label>
           <span className='text-red-500 p-1'>*</span>
           <Select
@@ -264,6 +279,21 @@ const FormEditKegiatan: React.FC = () => {
             isSearchable
             isClearable
             placeholder='Pilih PIC (Pencairan Penghasilan)'
+            value={optionsPencairanPenghasilan.find(
+              (option) => option.value === selectedPICValue
+            )}
+            onChange={(
+              selectedOption: SingleValue<{ value: string; label: string }>
+            ) => {
+              if (selectedOption) {
+                setFormData({
+                  ...formData,
+                  picPencairanPenghasilan: selectedOption.value,
+                });
+
+                setSelectedPICValue(selectedOption.value);
+              }
+            }}
           />
         </div>
 
@@ -352,24 +382,24 @@ const FormEditKegiatan: React.FC = () => {
             </div>
           </div>
         )}
-      </form>
-      <div className='flex gap-5 justify-start pt-8 text-white '>
-        <Link to='/dataKegiatan21'>
-          <ButtonTabel
-            text='Kembali'
-            icon={<IoArrowUndoSharp size={16} />}
-            bgColor='bg-gray'
-          />
-        </Link>
 
-        <button type='button' onClick={handleUpdate}>
+        <div className='flex gap-5 justify-start pt-8 text-white '>
+          <Link to='/dataKegiatan21'>
+            <ButtonTabel
+              text='Kembali'
+              icon={<IoArrowUndoSharp size={16} />}
+              bgColor='bg-gray'
+            />
+          </Link>
+
           <ButtonTabel
             text='Edit'
+            type='submit'
             icon={<FaEdit size={16} />}
             bgColor='bg-orange'
           />
-        </button>
-      </div>
+        </div>
+      </form>
     </div>
   );
 };

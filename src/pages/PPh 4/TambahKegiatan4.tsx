@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
-import FormTambahKegaiatn4 from '../../components/PPh 4/FormTambahKegaiatn4';
+import FormTambahKegaiatn4 from '../../components/PPh 4/FormTambahKegiatan4';
 import { Link } from 'react-router-dom';
 
 const TambahKegiatan4: React.FC = () => {

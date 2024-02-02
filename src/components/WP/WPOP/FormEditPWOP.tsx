@@ -339,7 +339,7 @@ const FormEditPWOP: React.FC = () => {
         )}
       </form>
       <div className='flex gap-5 justify-start pt-8 text-white '>
-        <Link to='/dataWPOP'>
+        <Link to='//registerWP/dataWPOP'>
           <ButtonTabel
             text='Kembali'
             icon={<IoArrowUndoSharp size={16} />}

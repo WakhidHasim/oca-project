@@ -41,7 +41,7 @@ interface ObjekPajak {
 }
 
 interface BadanUsaha {
-  kodeWPBadan: string;
+  kodeWajibPajakBadanUsaha: string;
   namaBadan: string;
   email: string;
   npwp: string;
@@ -99,12 +99,24 @@ const FormTambahKegiatan23: React.FC = () => {
     null
   );
 
+  const [errors, setErrors] = useState({
+    uraianKegiatan: '',
+    idKegiatanAnggaran: '',
+    kodeJenisPenghasilan: '',
+    picPencairanPenghasilan: '',
+    kodeWajibPajakBadanUsaha: '',
+    penghasilanBruto: '',
+    kodeObjek: '',
+    invoice: '',
+    dokumenKerjasamaKegiatan: '',
+  });
+
   const [formData, setFormData] = useState({
     uraianKegiatan: '',
     idKegiatanAnggaran: '',
     kodeJenisPenghasilan: '',
-    pic: '',
-    kodeWPBadan: '',
+    picPencairanPenghasilan: '',
+    kodeWajibPajakBadanUsaha: '',
     penghasilanBruto: '',
     kodeObjek: '',
     invoice: '',
@@ -138,97 +150,97 @@ const FormTambahKegiatan23: React.FC = () => {
           setDokumenKerjasamaFile(file);
           setFormData({
             ...formData,
-            dokumenKerjasamaKegiatan: file.name, // Menyimpan hanya nama file
+            dokumenKerjasamaKegiatan: file.name,
           });
           break;
         default:
           break;
       }
-      console.log(`${fileType} uploaded:`, file.name);
+    }
+  };
+
+  const fetchJenisPenghasilanOptions = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/jenis-penghasilan/pph23`
+      );
+      const data = await response.json();
+      if (data && data.result && data.result.length > 0) {
+        const optionsjenisPenghasilan = data.result.map(
+          (objek: JenisPenghasilan) => ({
+            value: objek.kodeJenisPenghasilan.toString(),
+            label: objek.jenisPenghasilan,
+          })
+        );
+        setOptionsjenisPenghasilan(optionsjenisPenghasilan);
+      }
+    } catch (error) {
+      console.error('Error fetching Jenis Penghasilan options:', error);
+    }
+  };
+
+  const fetchPengajuanAnggaranOptions = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/pengajuan-anggaran`
+      );
+      const data = await response.json();
+      if (data && data.result && data.result.length > 0) {
+        const optionsPengajuanAnggaran = data.result.map(
+          (objek: PengajuanAnggaran) => ({
+            value: objek.idKegiatanAnggaran,
+            label: objek.noPengajuan + ' - ' + objek.kegiatan,
+          })
+        );
+        setOptionsPengajuanAnggaran(optionsPengajuanAnggaran);
+      }
+    } catch (error) {
+      console.error('Error fetching Pengajuan Anggaran options:', error);
+    }
+  };
+
+  const fetchObjekPajakOptions = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/objek-pajak/pph23`
+      );
+      const data = await response.json();
+      if (data && data.result && data.result.length > 0) {
+        const objekPajakOptions = data.result.map((objek: ObjekPajak) => ({
+          value: objek.kodeObjek,
+          label: objek.objekPajak,
+          tarifNpwp: objek.tarifNpwp,
+        }));
+        setOptionsObjekPajak(objekPajakOptions);
+      }
+    } catch (error) {
+      console.error('Error fetching Objek Pajak options:', error);
+    }
+  };
+
+  const fetchBadanUsahaOptions = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/wajib-pajak-badan-usaha`
+      );
+      const data = await response.json();
+      if (data && data.result && data.result.length > 0) {
+        const optionsBadanUsaha = data.result.map((objek: BadanUsaha) => ({
+          value: objek.kodeWajibPajakBadanUsaha,
+          label: objek.namaBadan,
+          npwp: objek.npwp,
+          noRekening: objek.noRekening,
+          namaRekening: objek.namaRekening,
+          bankTransfer: objek.bankTransfer,
+        }));
+        setOptionsBadanUsahaOptions(optionsBadanUsaha);
+      }
+    } catch (error) {
+      console.error('Error fetching Badan Usaha options:', error);
     }
   };
 
   useEffect(() => {
-    const fetchJenisPenghasilanOptions = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/jenis-penghasilan/pph23`
-        );
-        const data = await response.json();
-        if (data && data.result && data.result.length > 0) {
-          const optionsjenisPenghasilan = data.result.map(
-            (objek: JenisPenghasilan) => ({
-              value: objek.kodeJenisPenghasilan.toString(),
-              label: objek.jenisPenghasilan,
-            })
-          );
-          setOptionsjenisPenghasilan(optionsjenisPenghasilan);
-        }
-      } catch (error) {
-        console.error('Error fetching Jenis Penghasilan options:', error);
-      }
-    };
-
-    const fetchPengajuanAnggaranOptions = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/pengajuan-anggaran`
-        );
-        const data = await response.json();
-        if (data && data.result && data.result.length > 0) {
-          const optionsPengajuanAnggaran = data.result.map(
-            (objek: PengajuanAnggaran) => ({
-              value: objek.idKegiatanAnggaran,
-              label: objek.noPengajuan + ' - ' + objek.kegiatan,
-            })
-          );
-          setOptionsPengajuanAnggaran(optionsPengajuanAnggaran);
-        }
-      } catch (error) {
-        console.error('Error fetching Pengajuan Anggaran options:', error);
-      }
-    };
-
-    const fetchObjekPajakOptions = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/objek-pajak/pph23`
-        );
-        const data = await response.json();
-        if (data && data.result && data.result.length > 0) {
-          const objekPajakOptions = data.result.map((objek: ObjekPajak) => ({
-            value: objek.kodeObjek,
-            label: objek.objekPajak,
-            tarifNpwp: objek.tarifNpwp,
-          }));
-          setOptionsObjekPajak(objekPajakOptions);
-        }
-      } catch (error) {
-        console.error('Error fetching Objek Pajak options:', error);
-      }
-    };
-
-    const fetchBadanUsahaOptions = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/wajib-pajak-badan-usaha`
-        );
-        const data = await response.json();
-        if (data && data.result && data.result.length > 0) {
-          const optionsBadanUsaha = data.result.map((objek: BadanUsaha) => ({
-            value: objek.kodeWPBadan,
-            label: objek.namaBadan,
-            npwp: objek.npwp,
-            noRekening: objek.noRekening,
-            namaRekening: objek.namaRekening,
-            bankTransfer: objek.bankTransfer,
-          }));
-          setOptionsBadanUsahaOptions(optionsBadanUsaha);
-        }
-      } catch (error) {
-        console.error('Error fetching Badan Usaha options:', error);
-      }
-    };
     fetchJenisPenghasilanOptions();
     fetchPengajuanAnggaranOptions();
     fetchObjekPajakOptions();
@@ -269,6 +281,80 @@ const FormTambahKegiatan23: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    if (!formData.uraianKegiatan) {
+      newErrors.uraianKegiatan = 'Uraian Kegiatan harus diisi';
+      isValid = false;
+    } else {
+      newErrors.uraianKegiatan = '';
+    }
+
+    if (!formData.kodeJenisPenghasilan) {
+      newErrors.kodeJenisPenghasilan = 'Jenis Penghasilan harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.kodeJenisPenghasilan = '';
+    }
+
+    if (!formData.idKegiatanAnggaran) {
+      newErrors.idKegiatanAnggaran = 'Pengajuan Anggaran harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.idKegiatanAnggaran = '';
+    }
+
+    if (!formData.kodeWajibPajakBadanUsaha) {
+      newErrors.kodeWajibPajakBadanUsaha = 'Nama Badan Usaha harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.kodeWajibPajakBadanUsaha = '';
+    }
+
+    if (!formData.kodeObjek) {
+      newErrors.kodeObjek = 'Objek Pajak harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.kodeObjek = '';
+    }
+
+    if (!formData.penghasilanBruto) {
+      newErrors.penghasilanBruto = 'Penghasilan Bruto harus diisi';
+      isValid = false;
+    } else {
+      newErrors.penghasilanBruto = '';
+    }
+
+    if (!formData.picPencairanPenghasilan) {
+      newErrors.picPencairanPenghasilan =
+        'PIC Pencairan Penghasilan harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.picPencairanPenghasilan = '';
+    }
+
+    if (!formData.invoice) {
+      newErrors.invoice = 'Invoice harus diisi';
+      isValid = false;
+    } else {
+      newErrors.invoice = '';
+    }
+
+    if (!formData.dokumenKerjasamaKegiatan) {
+      newErrors.dokumenKerjasamaKegiatan =
+        'Dokumen Kerjasama Kegiatan harus diisi';
+      isValid = false;
+    } else {
+      newErrors.dokumenKerjasamaKegiatan = '';
+    }
+
+    if (!isValid) {
+      setErrors(newErrors);
+      return;
+    }
+
     try {
       const formDataToSubmit = new FormData();
       formDataToSubmit.append('uraianKegiatan', formData.uraianKegiatan);
@@ -280,8 +366,14 @@ const FormTambahKegiatan23: React.FC = () => {
         'kodeJenisPenghasilan',
         formData.kodeJenisPenghasilan
       );
-      formDataToSubmit.append('pic', formData.pic);
-      formDataToSubmit.append('kodeWPBadan', formData.kodeWPBadan);
+      formDataToSubmit.append(
+        'picPencairanPenghasilan',
+        formData.picPencairanPenghasilan
+      );
+      formDataToSubmit.append(
+        'kodeWajibPajakBadanUsaha',
+        formData.kodeWajibPajakBadanUsaha
+      );
       formDataToSubmit.append('penghasilanBruto', formData.penghasilanBruto);
       formDataToSubmit.append('kodeObjek', formData.kodeObjek);
       formDataToSubmit.append('invoice', invoiceFile ? invoiceFile : '');
@@ -350,6 +442,12 @@ const FormTambahKegiatan23: React.FC = () => {
               }
             }}
           />
+
+          {errors.kodeJenisPenghasilan && (
+            <p className='text-red-500 text-sm'>
+              {errors.kodeJenisPenghasilan}
+            </p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -364,8 +462,6 @@ const FormTambahKegiatan23: React.FC = () => {
           </p>
           <input
             type='text'
-            id='uraianKegiatan'
-            name='uraianKegiatan'
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -374,6 +470,9 @@ const FormTambahKegiatan23: React.FC = () => {
             }
             className='w-full p-2 mt-2 border rounded-md text-sm'
           />
+          {errors.uraianKegiatan && (
+            <p className='text-red-500 text-sm'>{errors.uraianKegiatan}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -397,6 +496,9 @@ const FormTambahKegiatan23: React.FC = () => {
               }
             }}
           />
+          {errors.idKegiatanAnggaran && (
+            <p className='text-red-500 text-sm'>{errors.idKegiatanAnggaran}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -416,7 +518,7 @@ const FormTambahKegiatan23: React.FC = () => {
               if (selectedOption) {
                 setFormData({
                   ...formData,
-                  kodeWPBadan: selectedOption.value,
+                  kodeWajibPajakBadanUsaha: selectedOption.value,
                 });
                 const selectedBadan = optionsBadanUsaha.find(
                   (objek: { value: string; label: string }) =>
@@ -427,6 +529,11 @@ const FormTambahKegiatan23: React.FC = () => {
               }
             }}
           />
+          {errors.kodeWajibPajakBadanUsaha && (
+            <p className='text-red-500 text-sm'>
+              {errors.kodeWajibPajakBadanUsaha}
+            </p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -482,6 +589,9 @@ const FormTambahKegiatan23: React.FC = () => {
               }
             }}
           />
+          {errors.kodeObjek && (
+            <p className='text-red-500 text-sm'>{errors.kodeObjek}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -492,10 +602,12 @@ const FormTambahKegiatan23: React.FC = () => {
           <input
             type='number'
             id='penghasilanBruto'
-            value={formData.penghasilanBruto}
             onChange={handlePenghasilanBrutoChange}
             className='w-full p-2 border rounded-md mt-2 text-sm'
           />
+          {errors.penghasilanBruto && (
+            <p className='text-red-500 text-sm'>{errors.penghasilanBruto}</p>
+          )}
         </div>
         <div className='mb-5 relative'>
           <label className='inline-block font-semibold text-base mb-2'>
@@ -553,11 +665,16 @@ const FormTambahKegiatan23: React.FC = () => {
               if (selectedOption) {
                 setFormData({
                   ...formData,
-                  pic: selectedOption.value,
+                  picPencairanPenghasilan: selectedOption.value,
                 });
               }
             }}
           />
+          {errors.picPencairanPenghasilan && (
+            <p className='text-red-500 text-sm'>
+              {errors.picPencairanPenghasilan}
+            </p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -567,10 +684,14 @@ const FormTambahKegiatan23: React.FC = () => {
           <span className='text-red-500 p-1'>*</span>
           <input
             type='file'
+            accept='.pdf'
             id='invoice'
             className='w-full p-2 border rounded-md text-sm mt-2'
             onChange={(e) => handleFileUpload(e, 'invoice')}
           />
+          {errors.invoice && (
+            <p className='text-red-500 text-sm'>{errors.invoice}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -579,6 +700,7 @@ const FormTambahKegiatan23: React.FC = () => {
           </label>
           <input
             type='file'
+            accept='.pdf'
             id='fakturPajak'
             className='w-full p-2 border rounded-md text-sm mt-2'
             onChange={(e) => handleFileUpload(e, 'fakturPajak')}
@@ -591,10 +713,16 @@ const FormTambahKegiatan23: React.FC = () => {
           </label>
           <input
             type='file'
+            accept='.pdf'
             id='dokumenKerjasamaKegiatan'
             className='w-full p-2 border rounded-md text-sm mt-2'
             onChange={(e) => handleFileUpload(e, 'dokumenKerjasamaKegiatan')}
           />
+          {errors.dokumenKerjasamaKegiatan && (
+            <p className='text-red-500 text-sm'>
+              {errors.dokumenKerjasamaKegiatan}
+            </p>
+          )}
         </div>
         <div className='flex gap-5 justify-start pt-8 text-white '>
           <Link to='/dataKegiatan23'>

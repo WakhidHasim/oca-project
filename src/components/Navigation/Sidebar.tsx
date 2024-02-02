@@ -127,7 +127,7 @@ const Sidebar: React.FC = () => {
           <Link to='/dataKegiatan21'>
             <div
               className={`w-full flex gap-4 items-center h-10 px-8 ${
-                selectedMenu === '/dataKegiatan21'
+                selectedMenu?.includes('/dataKegiatan21')
                   ? 'bg-purple text-white shadow-lg'
                   : 'hover:bg-gray-30'
               } cursor-pointer  `}
@@ -136,7 +136,7 @@ const Sidebar: React.FC = () => {
               <FaDatabase size={16} />
               <span
                 className={` pl-2 text-xs md:text-sm ${
-                  selectedMenu === '/dataKegiatan21' ? 'text-white' : ''
+                  selectedMenu?.includes('/dataKegiatan21') ? 'text-white' : ''
                 }`}
               >
                 PPh 21
@@ -147,7 +147,7 @@ const Sidebar: React.FC = () => {
           <Link to='/dataKegiatan23'>
             <div
               className={`w-full flex gap-4 items-center h-10 px-8 ${
-                selectedMenu === '/dataKegiatan23'
+                selectedMenu?.includes('/dataKegiatan23')
                   ? 'bg-purple text-white shadow-lg'
                   : 'hover:bg-gray-30'
               } cursor-pointer  `}
@@ -156,7 +156,7 @@ const Sidebar: React.FC = () => {
               <BsBank size={16} />
               <span
                 className={` pl-2 text-xs md:text-sm ${
-                  selectedMenu === '/dataKegiatan23' ? 'text-white' : ''
+                  selectedMenu?.includes('/dataKegiatan23') ? 'text-white' : ''
                 }`}
               >
                 PPh 23
@@ -167,7 +167,7 @@ const Sidebar: React.FC = () => {
           <Link to='/kegiatanPPh4'>
             <div
               className={`w-full flex gap-4 items-center h-10 px-8 ${
-                selectedMenu === '/kegiatanPPh4'
+                selectedMenu?.includes('/kegiatanPPh4')
                   ? 'bg-purple text-white shadow-lg'
                   : 'hover:bg-gray-30'
               } cursor-pointer  `}
@@ -176,7 +176,7 @@ const Sidebar: React.FC = () => {
               <HiOutlineBuildingOffice2 size={16} />
               <span
                 className={`pl-2 text-xs md:text-sm ${
-                  selectedMenu === '/kegiatanPPh4' ? 'text-white' : ''
+                  selectedMenu?.includes('/kegiatanPPh4') ? 'text-white' : ''
                 }`}
               >
                 PPh 4 ayat 2
@@ -187,7 +187,7 @@ const Sidebar: React.FC = () => {
           <Link to='/inventaris'>
             <div
               className={`w-full flex gap-4 items-center h-10 px-8 ${
-                selectedMenu === '/inventaris'
+                selectedMenu?.includes('/inventaris')
                   ? 'bg-purple text-white shadow-lg'
                   : 'hover:bg-gray-30'
               } cursor-pointer  `}
@@ -196,7 +196,7 @@ const Sidebar: React.FC = () => {
               <MdOutlineAppRegistration size={16} />
               <span
                 className={`pl-2 text-xs md:text-sm ${
-                  selectedMenu === '/inventaris' ? 'text-white' : ''
+                  selectedMenu?.includes('/inventaris') ? 'text-white' : ''
                 }`}
               >
                 Inventarisasi Pajak
@@ -211,7 +211,7 @@ const Sidebar: React.FC = () => {
             <button
               onClick={toggleDropdown2}
               className={`flex gap-4 h-10 items-center justify-start hover:bg-gray-30 rounded-lg cursor-pointer   ${
-                selectedMenu === 'dropdown2'
+                selectedMenu?.includes('/registerWP')
                   ? 'bg-purple text-white shadow-lg'
                   : ''
               }`}
@@ -219,7 +219,7 @@ const Sidebar: React.FC = () => {
               <FaUserFriends size={16} />
               <span
                 className={`pl-2 text-xs md:text-sm ${
-                  selectedMenu === 'dropdown2' ? 'text-white' : ''
+                  selectedMenu?.includes('/registerWP') ? 'text-white' : ''
                 }`}
               >
                 Registrasi WP
@@ -236,21 +236,26 @@ const Sidebar: React.FC = () => {
                 <ul className='list-disc'>
                   <li
                     className={`cursor-pointer ${
-                      selectedMenu === 'dropdown2'
-                        ? 'hover:text-white'
-                        : 'hover:text-purple'
+                      selectedMenu?.includes('/registerWP')
+                      // ? 'hover:text-white'
+                      // : 'hover:text-purple'
                     } text-xs md:text-sm`}
                   >
-                    <Link to='/dataWPOP'> Wajib Pajak Orang Pribadi</Link>
+                    <Link to='/registerWP/dataWPOP'>
+                      {' '}
+                      Wajib Pajak Orang Pribadi
+                    </Link>
                   </li>
                   <li
                     className={`cursor-pointer ${
-                      selectedMenu === 'dropdown2'
-                        ? 'hover:text-white'
-                        : 'hover:text-purple'
+                      selectedMenu?.includes('/registerWP')
+                      // ? 'hover:text-white'
+                      // : 'hover:text-purple'
                     } pt-3 text-xs md:text-sm py-2`}
                   >
-                    <Link to='/dataWPBU'>Wajib Pajak Badan Usaha</Link>
+                    <Link to='/registerWP/dataWPBU'>
+                      Wajib Pajak Badan Usaha
+                    </Link>
                   </li>
                 </ul>
               </div>

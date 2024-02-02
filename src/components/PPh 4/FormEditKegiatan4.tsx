@@ -61,7 +61,7 @@ interface BadanUsaha {
   statusPkp: string;
 }
 
-const FormEditKegiatan23: React.FC = () => {
+const FormEditKegiatan4: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const kodeKegiatanBadan = location?.state?.kodeKegiatanBadan || '';
@@ -165,7 +165,7 @@ const FormEditKegiatan23: React.FC = () => {
   const fetchJenisPenghasilanOptions = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/jenis-penghasilan/pph23`
+        `http://localhost:3000/api/jenis-penghasilan/pph4-ayat-2`
       );
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
@@ -205,7 +205,7 @@ const FormEditKegiatan23: React.FC = () => {
   const fetchObjekPajakOptions = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/objek-pajak/pph23`
+        `http://localhost:3000/api/objek-pajak/pph4-ayat-2`
       );
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
@@ -251,10 +251,10 @@ const FormEditKegiatan23: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const fetchPPh23 = async () => {
+    const fetchPPh4Ayat2 = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/kegiatan-penghasilan-badan/pph23/${kodeKegiatanBadan}`
+          `http://localhost:3000/api/kegiatan-penghasilan-badan/pph4/${kodeKegiatanBadan}`
         );
         const data = await response.json();
 
@@ -283,7 +283,7 @@ const FormEditKegiatan23: React.FC = () => {
       }
     };
 
-    fetchPPh23();
+    fetchPPh4Ayat2();
   }, [kodeKegiatanBadan]);
 
   const handlePenghasilanBrutoChange = (
@@ -346,7 +346,7 @@ const FormEditKegiatan23: React.FC = () => {
         dokumenKerjasamaFile ? dokumenKerjasamaFile : ''
       );
 
-      const url = `http://localhost:3000/api/kegiatan-penghasilan-badan/pph23/${kodeKegiatanBadan}`;
+      const url = `http://localhost:3000/api/kegiatan-penghasilan-badan/pph4/${kodeKegiatanBadan}`;
       const response = await axios.put(url, formDataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -689,4 +689,4 @@ const FormEditKegiatan23: React.FC = () => {
     </div>
   );
 };
-export default FormEditKegiatan23;
+export default FormEditKegiatan4;
