@@ -42,7 +42,7 @@ const FormTambahWPBU: React.FC = () => {
     namaRekening: '',
     namaNaraHubung: '',
     kontakNaraHubung: '',
-    adaSkbPPh23: '',
+    // adaSkbPPh23: '',
     fileFotoIdentitasBadan: '',
     fileFotoBuktiRekening: '',
     fileFotoNpwp: '',
@@ -219,12 +219,12 @@ const FormTambahWPBU: React.FC = () => {
       newErrors.kontakNaraHubung = '';
     }
 
-    if (!formData.adaSkbPPh23) {
-      newErrors.adaSkbPPh23 = 'SKB PPh 23 harus diisi';
-      isValid = false;
-    } else {
-      newErrors.adaSkbPPh23 = '';
-    }
+    // if (!formData.adaSkbPPh23) {
+    //   newErrors.adaSkbPPh23 = 'SKB PPh 23 harus diisi';
+    //   isValid = false;
+    // } else {
+    //   newErrors.adaSkbPPh23 = '';
+    // }
 
     if (!formData.fileFotoIdentitasBadan) {
       newErrors.fileFotoIdentitasBadan =
@@ -314,7 +314,7 @@ const FormTambahWPBU: React.FC = () => {
             ...formData,
           });
           toast.success('Data added successfully!');
-          navigate('/dataWPBU');
+          navigate('/registerWP/dataWPBU');
         }
       }
     } catch (error) {
@@ -620,9 +620,9 @@ const FormTambahWPBU: React.FC = () => {
               Tidak
             </label>
           </div>
-          {errors.adaSkbPPh23 && (
+          {/* {errors.adaSkbPPh23 && (
             <p className='text-red-500 text-sm'>{errors.adaSkbPPh23}</p>
-          )}
+          )} */}
         </div>
 
         {showForm && (

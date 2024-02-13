@@ -59,7 +59,7 @@ const DataWPOP: React.FC = () => {
         <div className='bg-white mt-5 rounded'>
           <div className='w-full mx-auto p-5 rounded'>
             <div className='flex flex-col md:flex-row py-3 justify-between'>
-              <div className='flex md:flex-row flex-col items-center'>
+              <div className='flex md:flex-row flex-col items-center ml-5'>
                 <Link to='/tambahWPOP'>
                   <ButtonTabel
                     text='Tambah Data'
@@ -69,7 +69,7 @@ const DataWPOP: React.FC = () => {
                 </Link>
               </div>
               <div className='flex md:flex-row flex-col items-center'>
-                <div className='flex justify-end'>
+                <div className='flex justify-end mr-5'>
                   <SearchBar />
                 </div>
               </div>

@@ -15,7 +15,7 @@ const MySwal = withReactContent(Swal);
 import { toast } from 'react-toastify';
 
 export type ApiData = {
-  kodeWPBadan: string;
+  kodeWajibPajakBadanUsaha: string;
   namaBadan: string;
   email: string;
   npwp?: string;
@@ -66,7 +66,7 @@ const DataWPBU: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (kodeWPBadan: string) => {
+  const handleDelete = async (kodeWajibPajakBadanUsaha: string) => {
     MySwal.fire({
       title: 'Apakah Anda Yakin ?',
       text: 'Data yang dihapus tidak bisa dikembalikan!',
@@ -78,7 +78,7 @@ const DataWPBU: React.FC = () => {
       cancelButtonText: 'Batal',
     }).then(async (result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
-        const url = `http://localhost:3000/api/wajib-pajak-badan-usaha/${kodeWPBadan}`;
+        const url = `http://localhost:3000/api/wajib-pajak-badan-usaha/${kodeWajibPajakBadanUsaha}`;
         const headers = {
           'Content-Type': 'application/json',
         };
@@ -107,8 +107,8 @@ const DataWPBU: React.FC = () => {
     });
   };
 
-  const ActionsButtons: React.FC<{ kodeWPBadan: string }> = ({
-    kodeWPBadan,
+  const ActionsButtons: React.FC<{ kodeWajibPajakBadanUsaha: string }> = ({
+    kodeWajibPajakBadanUsaha,
   }) => (
     <div className='flex space-x-2 items-center text-white'>
       <Link to='/editWPBU'>
@@ -120,7 +120,7 @@ const DataWPBU: React.FC = () => {
       </Link>
 
       <ButtonTabel
-        onClick={() => handleDelete(kodeWPBadan)}
+        onClick={() => handleDelete(kodeWajibPajakBadanUsaha)}
         text='Hapus'
         icon={<RiDeleteBin6Fill size={16} />}
         bgColor='bg-delete'
@@ -150,7 +150,7 @@ const DataWPBU: React.FC = () => {
         <div className='bg-white mt-5 rounded'>
           <div className='w-full mx-auto p-5 rounded'>
             <div className='flex flex-col md:flex-row py-3 justify-between'>
-              <div className='flex md:flex-row flex-col items-center'>
+              <div className='flex md:flex-row flex-col items-center ml-5'>
                 <Link to='/tambahWPBU'>
                   <ButtonTabel
                     text='Tambah Data'
@@ -160,7 +160,7 @@ const DataWPBU: React.FC = () => {
                 </Link>
               </div>
               <div className='flex md:flex-row flex-col items-center'>
-                <div className='flex justify-end'>
+                <div className='flex justify-end mr-5'>
                   <SearchBar />
                 </div>
               </div>
@@ -175,7 +175,11 @@ const DataWPBU: React.FC = () => {
                   col1: item.namaBadan,
                   col2: item.npwp,
                   col3: item.bankTransfer,
-                  col5: <ActionsButtons kodeWPBadan={item.kodeWPBadan} />,
+                  col5: (
+                    <ActionsButtons
+                      kodeWajibPajakBadanUsaha={item.kodeWajibPajakBadanUsaha}
+                    />
+                  ),
                 }))}
               />
             )}
