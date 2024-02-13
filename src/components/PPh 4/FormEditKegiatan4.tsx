@@ -41,7 +41,7 @@ interface ObjekPajak {
 }
 
 interface BadanUsaha {
-  kodeWPBadan: string;
+  kodeWajibPajakBadanUsaha: string;
   namaBadan: string;
   email: string;
   npwp: string;
@@ -83,12 +83,12 @@ const FormEditKegiatan4: React.FC = () => {
   const [optionsPengajuanAnggaran, setOptionsPengajuanAnggaran] = useState<
     { value: string; label: string }[]
   >([]);
-  const selectedIdl = sessionStorage.getItem('selectedIdl') || '';
-  const namaSatker = sessionStorage.getItem('namaSatker') || '';
+  const idl = localStorage.getItem('idl') || '';
+  const nama_satker = localStorage.getItem('nama_satker') || '';
 
   const optionsPencairanPenghasilan = [
     { value: '233.03', label: 'DPK-Direktorat Perencanaan dan Keuangan' },
-    { value: selectedIdl, label: namaSatker },
+    { value: idl, label: nama_satker },
   ];
 
   const [selectedBadanUsaha, setSelectedBadanUsaha] =
@@ -118,8 +118,8 @@ const FormEditKegiatan4: React.FC = () => {
     uraianKegiatan: '',
     idKegiatanAnggaran: '',
     kodeJenisPenghasilan: '',
-    pic: '',
-    kodeWPBadan: '',
+    picPencairanPenghasilan: '',
+    kodeWajibPajakBadanUsaha: '',
     penghasilanBruto: '',
     kodeObjek: '',
     invoice: '',
@@ -229,7 +229,7 @@ const FormEditKegiatan4: React.FC = () => {
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsBadanUsaha = data.result.map((objek: BadanUsaha) => ({
-          value: objek.kodeWPBadan,
+          value: objek.kodeWajibPajakBadanUsaha,
           label: objek.namaBadan,
           npwp: objek.npwp,
           noRekening: objek.noRekening,
@@ -262,16 +262,16 @@ const FormEditKegiatan4: React.FC = () => {
           data.result.kodeJenisPenghasilan.toString()
         );
         setSelectedPengajuanAnggaran(data.result.idKegiatanAnggaran);
-        setSelectedBadanUsahaValue(data.result.kodeWPBadan);
+        setSelectedBadanUsahaValue(data.result.kodeWajibPajakBadanUsaha);
         setSelectedObjekPajakValue(data.result.kodeObjek);
-        setSelectedPICValue(data.result.pic);
+        setSelectedPICValue(data.result.picPencairanPenghasilan);
 
         setFormData({
           uraianKegiatan: data.result.uraianKegiatan,
           idKegiatanAnggaran: data.result.idKegiatanAnggaran,
           kodeJenisPenghasilan: data.result.kodeJenisPenghasilan.toString(),
-          pic: data.result.pic,
-          kodeWPBadan: data.result.kodeWPBadan,
+          picPencairanPenghasilan: data.result.picPencairanPenghasilan,
+          kodeWajibPajakBadanUsaha: data.result.kodeWajibPajakBadanUsaha,
           penghasilanBruto: data.result.penghasilanBruto.toString(),
           kodeObjek: data.result.kodeObjek,
           invoice: data.result.invoice,
@@ -332,8 +332,14 @@ const FormEditKegiatan4: React.FC = () => {
         'kodeJenisPenghasilan',
         formData.kodeJenisPenghasilan
       );
-      formDataToSubmit.append('pic', formData.pic);
-      formDataToSubmit.append('kodeWPBadan', formData.kodeWPBadan);
+      formDataToSubmit.append(
+        'picPencairanPenghasilan',
+        formData.picPencairanPenghasilan
+      );
+      formDataToSubmit.append(
+        'kodeWajibPajakBadanUsaha',
+        formData.kodeWajibPajakBadanUsaha
+      );
       formDataToSubmit.append('penghasilanBruto', formData.penghasilanBruto);
       formDataToSubmit.append('kodeObjek', formData.kodeObjek);
       formDataToSubmit.append('invoice', invoiceFile ? invoiceFile : '');
@@ -364,7 +370,7 @@ const FormEditKegiatan4: React.FC = () => {
             ...formData,
           });
           toast.success('Data added successfully!');
-          navigate('/dataKegiatan23');
+          navigate('/kegiatanPPh4');
         }
       }
     } catch (error) {
@@ -481,7 +487,7 @@ const FormEditKegiatan4: React.FC = () => {
               if (selectedOption) {
                 setFormData({
                   ...formData,
-                  kodeWPBadan: selectedOption.value,
+                  kodeWajibPajakBadanUsaha: selectedOption.value,
                 });
                 const selectedBadan = optionsBadanUsaha.find(
                   (objek: { value: string; label: string }) =>
@@ -624,7 +630,7 @@ const FormEditKegiatan4: React.FC = () => {
               if (selectedOption) {
                 setFormData({
                   ...formData,
-                  pic: selectedOption.value,
+                  picPencairanPenghasilan: selectedOption.value,
                 });
 
                 setSelectedPICValue(selectedOption.value);
@@ -670,11 +676,11 @@ const FormEditKegiatan4: React.FC = () => {
           />
         </div>
         <div className='flex gap-5 justify-start pt-8 text-white '>
-          <Link to='/dataKegiatan23'>
+          <Link to='/kegiatanPPh4'>
             <ButtonTabel
               text='Kembali'
               icon={<IoArrowUndoSharp size={16} />}
-              bgColor='bg-gray'
+              bgColor='bg-detail'
             />
           </Link>
 

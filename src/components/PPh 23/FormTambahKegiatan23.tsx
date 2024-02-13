@@ -82,12 +82,12 @@ const FormTambahKegiatan23: React.FC = () => {
     { value: string; label: string }[]
   >([]);
 
-  const selectedIdl = sessionStorage.getItem('selectedIdl') || '';
-  const namaSatker = sessionStorage.getItem('namaSatker') || '';
+  const idl = localStorage.getItem('idl') || '';
+  const nama_satker = localStorage.getItem('nama_satker') || '';
 
   const optionsPencairanPenghasilan = [
     { value: '233.03', label: 'DPK-Direktorat Perencanaan dan Keuangan' },
-    { value: selectedIdl, label: namaSatker },
+    { value: idl, label: nama_satker },
   ];
 
   const [selectedBadanUsaha, setSelectedBadanUsaha] =
@@ -385,7 +385,7 @@ const FormTambahKegiatan23: React.FC = () => {
         'dokumenKerjasamaKegiatan',
         dokumenKerjasamaFile ? dokumenKerjasamaFile : ''
       );
-      formDataToSubmit.append('idl', selectedIdl);
+      formDataToSubmit.append('idl', idl);
 
       const url = 'http://localhost:3000/api/kegiatan-penghasilan-badan/pph23';
       const response = await axios.post(url, formDataToSubmit, {
@@ -729,7 +729,7 @@ const FormTambahKegiatan23: React.FC = () => {
             <ButtonTabel
               text='Kembali'
               icon={<IoArrowUndoSharp size={16} />}
-              bgColor='bg-gray'
+              bgColor='bg-detail'
             />
           </Link>
 

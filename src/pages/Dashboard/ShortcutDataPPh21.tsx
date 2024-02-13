@@ -50,14 +50,14 @@ const ShortcutDataPPh21: React.FC = () => {
             <div className='flex flex-col md:flex-row py-3 justify-between pb-5'>
               <div className='flex md:flex-row flex-col items-center'>
                 <Link to='/dashboard'>
-                  <button className='bg-gray-400 text-white p-2 rounded px-4 flex gap-1 text-sm'>
-                    <IoArrowUndoSharp size={18} clasName='p-1 text-white  ' />
+                  <button className='bg-detail text-white p-2 rounded px-4 flex gap-1 text-sm ml-5'>
+                    <IoArrowUndoSharp size={18} className='p-1 text-white' />
                     <span>Kembali</span>
                   </button>
                 </Link>
               </div>
               <div className='flex md:flex-row flex-col items-center'>
-                <div className='flex justify-end'>
+                <div className='flex justify-end mr-5'>
                   <DateRange />
                   <SearchBar />
                 </div>

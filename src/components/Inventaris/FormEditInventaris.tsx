@@ -136,7 +136,7 @@ const FormEditInventaris: React.FC = () => {
           <ButtonTabel
             text='Kembali'
             icon={<IoArrowUndoSharp size={16} />}
-            bgColor='bg-gray'
+            bgColor='bg-detail'
           />
         </Link>
 

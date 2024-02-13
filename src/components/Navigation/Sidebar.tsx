@@ -1,20 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaUserCircle, FaDatabase, FaUserFriends } from 'react-icons/fa';
 import { MdOutlineAppRegistration, MdDomainVerification } from 'react-icons/md';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { AiFillDashboard } from 'react-icons/ai';
 import { BsBank } from 'react-icons/bs';
 import { HiOutlineBuildingOffice2 } from 'react-icons/hi2';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Sidebar: React.FC = () => {
-  const location = useLocation();
-
-  const [namaPegawai, setNamaPegawai] = useState<string | null>(null);
-  const [namaSatker, setNamaSatker] = useState<string | null>(null);
-
   const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
-  const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
+  // const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
 
   // const toggleDropdown1 = () => {
@@ -24,24 +19,15 @@ const Sidebar: React.FC = () => {
 
   const toggleDropdown2 = () => {
     setIsDropdownOpen2(!isDropdownOpen2);
-    setIsDropdownOpen1(false);
+    // setIsDropdownOpen1(false);
   };
+
+  const namaAgent = localStorage.getItem('nama_agent');
+  const namaSatker = localStorage.getItem('nama_satker');
 
   const handleMenuClick = (menu: string) => {
     setSelectedMenu(menu);
   };
-
-  const storedNamaPegawai = sessionStorage.getItem('namaPegawai');
-  const storedNamaSatker = sessionStorage.getItem('namaSatker');
-
-  useEffect(() => {
-    setNamaPegawai(storedNamaPegawai);
-    setNamaSatker(storedNamaSatker);
-  }, []);
-
-  useEffect(() => {
-    setSelectedMenu(location.pathname);
-  }, [location]);
 
   return (
     <div className='w-1/2 md:w-1/3 lg:w-64 xl:w-72 pt-28 fixed md:top-0 md:left-0 min-h-screen lg:block bg-white z-30 transition duration-500 ease-in-out'>
@@ -49,7 +35,7 @@ const Sidebar: React.FC = () => {
         <div className='flex pl-4 justify-center items-center gap-3 mb-4'>
           <FaUserCircle size={37} />
           <div className='w-full mx-auto flex flex-col justify-end'>
-            <p className='text-[14px] font-semibold'>{namaPegawai}</p>
+            <p className='text-[14px] font-semibold'>{namaAgent}</p>
             <span className='text-xs pt-1'>Agent</span>
           </div>
         </div>

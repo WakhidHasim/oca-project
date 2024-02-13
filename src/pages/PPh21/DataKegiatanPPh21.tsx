@@ -27,6 +27,8 @@ interface ApiData {
   picPencairanPenghasilan: string;
   mintaBillingSendiri: boolean;
   idl: string;
+  totalPenghasilanBruto: number;
+  totalPotonganPajak: number;
 }
 
 interface PengajuanAnggaran {
@@ -220,7 +222,7 @@ const DataKegiatanPPh21: React.FC = () => {
         <div className='bg-white mt-5 rounded'>
           <div className='w-full mx-auto p-5 rounded'>
             <div className='flex flex-col md:flex-row py-3 justify-between'>
-              <div className='flex md:flex-row flex-col items-center'>
+              <div className='flex md:flex-row flex-col items-center ml-5'>
                 <Link to='/dataKegiatan21/tambahKegiatan21'>
                   <ButtonTabel
                     text='Tambah Data'
@@ -230,7 +232,7 @@ const DataKegiatanPPh21: React.FC = () => {
                 </Link>
               </div>
               <div className='flex md:flex-row flex-col items-center'>
-                <div className='flex justify-end items-center'>
+                <div className='flex justify-end items-center mr-5'>
                   <DateRange />
                   <SearchBar />
                 </div>
@@ -246,8 +248,8 @@ const DataKegiatanPPh21: React.FC = () => {
                   col1: formatIndonesianDate(item.tanggalInput),
                   col2: item.uraianKegiatan,
                   col3: noPengajuan(item.idKegiatanAnggaran),
-                  col4: '',
-                  col5: '',
+                  col4: item.totalPotonganPajak,
+                  col5: item.totalPenghasilanBruto,
                   col6: <ActionsButtons kodeKegiatanOP={item.kodeKegiatanOP} />,
                 }))}
               />

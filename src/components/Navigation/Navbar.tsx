@@ -21,15 +21,11 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   const token = localStorage.getItem('token');
 
   const handleLogout = () => {
-    sessionStorage.removeItem('namaPegawai');
-    sessionStorage.removeItem('selectedIdl');
-    sessionStorage.removeItem('namaSatker');
-
-    document.cookie.split(';').forEach((c) => {
-      document.cookie = c
-        .replace(/^ +/, '')
-        .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
-    });
+    localStorage.removeItem('nip');
+    localStorage.removeItem('nama_pegawai');
+    localStorage.removeItem('idl');
+    localStorage.removeItem('nama_satker');
+    localStorage.removeItem('token');
 
     toast.success('Anda Telah Berhasil Logout!');
     window.location.href = '/';

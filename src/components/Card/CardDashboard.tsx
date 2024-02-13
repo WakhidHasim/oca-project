@@ -4,9 +4,10 @@ import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 interface CardProps {
   text: string;
   icon: ReactNode;
+  count: string;
 }
 
-const CardDashboard: React.FC<CardProps> = ({ text, icon }) => {
+const CardDashboard: React.FC<CardProps> = ({ text, icon, count }) => {
   return (
     <div className='w-full max-w-md mx-auto bg-white'>
       <div className='border rounded shadow-md'>
@@ -17,7 +18,7 @@ const CardDashboard: React.FC<CardProps> = ({ text, icon }) => {
               {text}
             </h1>
             <span className='text-2xl md:text-3xl pt-5 text-gray-500 text-right '>
-              0
+              {count}
             </span>
           </div>
         </div>

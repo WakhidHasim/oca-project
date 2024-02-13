@@ -30,12 +30,12 @@ const FormTambahKegiatan: React.FC = () => {
     { value: string; label: string }[]
   >([]);
 
-  const selectedIdl = sessionStorage.getItem('selectedIdl') || '';
-  const namaSatker = sessionStorage.getItem('namaSatker') || '';
+  const idl = localStorage.getItem('idl') || '';
+  const nama_satker = localStorage.getItem('nama_satker') || '';
 
   const optionsPencairanPenghasilan = [
     { value: '233.03', label: 'DPK-Direktorat Perencanaan dan Keuangan' },
-    { value: selectedIdl, label: namaSatker },
+    { value: idl, label: nama_satker },
   ];
 
   const [errors, setErrors] = useState({
@@ -51,7 +51,7 @@ const FormTambahKegiatan: React.FC = () => {
     kodeJenisPenghasilan: 0,
     picPencairanPenghasilan: '',
     mintaBillingSendiri: false,
-    idl: selectedIdl,
+    idl: idl,
   });
 
   const fetchJenisPenghasilanOptions = async () => {
@@ -321,7 +321,7 @@ const FormTambahKegiatan: React.FC = () => {
             <ButtonTabel
               text='Kembali'
               icon={<IoArrowUndoSharp size={16} />}
-              bgColor='bg-gray'
+              bgColor='bg-detail'
             />
           </Link>
 

@@ -1,12 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 import SatuanSatkerButton from '../../components/Button/SatuanSatkerButton';
 
 const Verifikasi: React.FC = () => {
-  const buttonData = [
-    'PRODI S1-SISTEM INFORMASI',
-    'DIREKTORAT PERENCANAAN DAN KEUANGAN',
-  ];
+  const navigate = useNavigate();
+
+  const [agentName, setAgentName] = useState<string | null>(null);
+  const [namaSatker, setNamaSatker] = useState<string[] | null>(null);
+  const [nip, setNip] = useState<string>('');
+  const [, setSelectedSatker] = useState<string>('');
+  const [idl, setIdl] = useState<string>('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const { nip, nama_pegawai, nama_satker, idl } = JSON.parse(
+        atob(token.split('.')[1])
+      );
+
+      setNip(nip);
+      setAgentName(nama_pegawai);
+      setNamaSatker(Array.isArray(nama_satker) ? nama_satker : [nama_satker]);
+      setIdl(idl || '');
+    }
+  }, []);
+
+  const handleSatkerSelection = (
+    selectedSatker: string,
+    selectedIdl: string
+  ) => {
+    setSelectedSatker(selectedSatker);
+    setIdl(selectedIdl);
+    localStorage.setItem('nip', nip || '');
+    localStorage.setItem('nama_agent', agentName || '');
+    localStorage.setItem('idl', [selectedIdl][0]);
+    localStorage.setItem('nama_satker', [selectedSatker][0]);
+
+    navigate('/dashboard', { state: { selectedSatker } });
+  };
+
+  const buttonData = namaSatker || [];
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-[#E9E9E9] '>
@@ -23,12 +57,16 @@ const Verifikasi: React.FC = () => {
                 </h1>
               </div>
               <h2 className='font-semibold text-base lg:text-lg pb-2'>
-                Wiwi Widayani, S.Kom M.Kom
+                {agentName}
               </h2>
               <p className='text-sm'>Pilih Satuan Kerja </p>
               <div className='pt-3 space-y-4 justify-start flex items-center flex-col'>
                 {buttonData.map((text, index) => (
-                  <SatuanSatkerButton key={index} text={text} />
+                  <SatuanSatkerButton
+                    key={index}
+                    text={text}
+                    onClick={() => handleSatkerSelection(text, idl[index])}
+                  />
                 ))}
               </div>
             </div>

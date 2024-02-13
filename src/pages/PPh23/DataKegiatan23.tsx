@@ -78,12 +78,12 @@ const DataKegiatan23: React.FC = () => {
     return badanUsaha ? badanUsaha.namaBadan : 'Nama Badan Not Found';
   };
 
-  const selectedIdl = sessionStorage.getItem('selectedIdl') || '';
+  const idl = localStorage.getItem('idl') || '';
 
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/kegiatan-penghasilan-badan/pph23?idl=${selectedIdl}`
+        `http://localhost:3000/api/kegiatan-penghasilan-badan/pph23?idl=${idl}`
       );
 
       if (!response.ok) {
@@ -244,7 +244,7 @@ const DataKegiatan23: React.FC = () => {
         <div className='bg-white mt-5 rounded'>
           <div className='w-full mx-auto p-5 rounded'>
             <div className='flex flex-col md:flex-row py-3 justify-between'>
-              <div className='flex md:flex-row flex-col items-center'>
+              <div className='flex md:flex-row flex-col items-center ml-5'>
                 <Link to='/tambahKegiatan23'>
                   <ButtonTabel
                     text='Tambah Data'
@@ -253,7 +253,7 @@ const DataKegiatan23: React.FC = () => {
                   />
                 </Link>
               </div>
-              <div className='flex md:flex-row flex-col items-center'>
+              <div className='flex md:flex-row flex-col items-center mr-5'>
                 <div className='flex justify-end'>
                   <DateRange />
                   <SearchBar />

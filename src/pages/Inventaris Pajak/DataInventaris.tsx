@@ -6,7 +6,7 @@ import DateRange from '../../components/Filter/DateRange';
 import SearchBar from '../../components/Search/SearchBar';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa6';
 
 import Swal from 'sweetalert2';
@@ -36,6 +36,8 @@ interface ObjekPajak {
 }
 
 const DataInventaris: React.FC = () => {
+  const navigate = useNavigate();
+
   const [apiData, setApiData] = useState<ApiData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -48,10 +50,12 @@ const DataInventaris: React.FC = () => {
     return objekPajak ? objekPajak.objekPajak : 'Nama Badan Not Found';
   };
 
-  const fetchData = async () => {
+  const idl = localStorage.getItem('idl') || '';
+
+  const fetchData = async (page = 1) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/inventarisasi-pajak`
+        `http://localhost:3000/api/inventarisasi-pajak?idl=${idl}&page=${page}`
       );
 
       if (!response.ok) {
@@ -173,8 +177,8 @@ const DataInventaris: React.FC = () => {
         </div>
         <div className='bg-white mt-5 rounded'>
           <div className='w-full mx-auto p-5 rounded'>
-            <div className='flex flex-col md:flex-row py-3 justify-between pb-8'>
-              <div className='flex md:flex-row flex-col items-center'>
+            <div className='flex flex-col md:flex-row py-3 justify-between'>
+              <div className='flex md:flex-row flex-col items-center ml-5'>
                 <Link to='/tambahinventaris'>
                   <ButtonTabel
                     text='Tambah Data'
@@ -183,7 +187,7 @@ const DataInventaris: React.FC = () => {
                   />
                 </Link>
               </div>
-              <div className='flex md:flex-row flex-col items-center'>
+              <div className='flex md:flex-row flex-col items-center mr-5'>
                 <div className='flex justify-end'>
                   <DateRange />
                   <SearchBar />

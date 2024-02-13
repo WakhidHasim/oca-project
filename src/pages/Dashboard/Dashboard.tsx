@@ -20,44 +20,53 @@ const Dashboard: React.FC = () => {
         <div className='p-2 pt-5 pb-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10'>
           <Link to='/PPh21Shortcut'>
             <CardDashboard
-              text='Total PPh 21 Entri'
+              text='Total PPh 21 Entry'
               icon={<FaDatabase size={35} />}
+              count='0'
             />
           </Link>
 
           <CardDashboard
             text='Total PPh 21 Verifikasi'
             icon={<FaDatabase size={35} />}
+            count='0'
           />
           <CardDashboard
             text='Total PPh 21 Setor'
             icon={<FaDatabase size={35} />}
+            count='0'
           />
 
           <CardDashboard
-            text='Total PPh 23 Entri'
+            text='Total PPh 23 Entry'
             icon={<BsBank size={35} />}
+            count='0'
           />
           <CardDashboard
             text='Total PPh 23 Verifikasi'
             icon={<BsBank size={35} />}
+            count='0'
           />
           <CardDashboard
             text='Total PPh 23 Setor'
             icon={<BsBank size={35} />}
+            count='0'
           />
 
           <CardDashboard
-            text='Total PPh 4 Ayat 2 Entri'
+            text='Total PPh 4 Ayat 2 Entry'
             icon={<HiOutlineBuildingOffice2 size={35} />}
+            count='0'
           />
           <CardDashboard
             text='Total PPh 4 Ayat 2 Verifikasi'
             icon={<HiOutlineBuildingOffice2 size={35} />}
+            count='0'
           />
           <CardDashboard
             text='Total PPh 4 Ayat 2 Setor'
             icon={<HiOutlineBuildingOffice2 size={35} />}
+            count='0'
           />
         </div>
         <div className='flex justify-end w-full mx-auto absolute bottom-0 right-10 '>

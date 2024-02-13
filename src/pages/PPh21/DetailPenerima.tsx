@@ -223,7 +223,7 @@ const DetailPenerima: React.FC = () => {
         <div className='bg-white mt-5 rounded'>
           <div className='w-full mx-auto p-5 rounded'>
             <div className='flex flex-col md:flex-row py-3 justify-between'>
-              <div className='flex md:flex-row flex-col items-center'>
+              <div className='flex md:flex-row flex-col items-center ml-5'>
                 <Link to='/tambahPenerima21'>
                   <ButtonTabel
                     text='Tambah Data'
@@ -232,7 +232,7 @@ const DetailPenerima: React.FC = () => {
                   />
                 </Link>
               </div>
-              <div className='flex md:flex-row flex-col items-center'>
+              <div className='flex md:flex-row flex-col items-center mr-5'>
                 <div className='flex justify-end'>
                   <DateRange />
                   <SearchBar />
