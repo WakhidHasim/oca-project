@@ -15,7 +15,7 @@ const MySwal = withReactContent(Swal);
 
 import { toast } from 'react-toastify';
 
-export type ApiData = {
+type ApiData = {
   idInventarisasiPajak: string;
   uraianKegiatan: string;
   idKegiatanAnggaran: string;
@@ -55,7 +55,7 @@ const DataInventaris: React.FC = () => {
   const fetchData = async (page = 1) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/inventarisasi-pajak?idl=${idl}&page=${page}`
+        `/api/inventarisasi-pajak?idl=${idl}&page=${page}`
       );
 
       if (!response.ok) {
@@ -78,7 +78,7 @@ const DataInventaris: React.FC = () => {
   useEffect(() => {
     fetchData();
 
-    fetch('http://localhost:3000/api/objek-pajak')
+    fetch('/api/objek-pajak')
       .then((response) => response.json())
       .then(
         (data: {
@@ -106,7 +106,7 @@ const DataInventaris: React.FC = () => {
       cancelButtonText: 'Batal',
     }).then(async (result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
-        const url = `http://localhost:3000/api/inventarisasi-pajak/${idInventarisasiPajak}`;
+        const url = `/api/inventarisasi-pajak/${idInventarisasiPajak}`;
         const headers = {
           'Content-Type': 'application/json',
         };
@@ -135,17 +135,20 @@ const DataInventaris: React.FC = () => {
     });
   };
 
+  const handleEditClick = (idInventarisasiPajak: string) => {
+    navigate(`/editinventaris`, { state: { idInventarisasiPajak } });
+  };
+
   const ActionsButtons: React.FC<{ idInventarisasiPajak: string }> = ({
     idInventarisasiPajak,
   }) => (
     <div className='flex space-x-2 items-center text-white'>
-      <Link to='/editinventaris'>
-        <ButtonTabel
-          text='Edit'
-          icon={<FaEdit size={16} />}
-          bgColor='bg-orange'
-        />
-      </Link>
+      <ButtonTabel
+        text='Edit'
+        icon={<FaEdit size={16} />}
+        onClick={() => handleEditClick(idInventarisasiPajak)}
+        bgColor='bg-orange'
+      />
 
       <ButtonTabel
         onClick={() => handleDelete(idInventarisasiPajak)}

@@ -8,6 +8,8 @@ import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { TbListDetails } from 'react-icons/tb';
 import { FaPlus } from 'react-icons/fa6';
+import { formatIndonesianDate } from '../../utils/FormatIndonesianDate';
+import { formatRupiah } from '../../utils/FormatRupiah';
 
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -63,10 +65,14 @@ const DataKegiatanPPh21: React.FC = () => {
       : 'no Pengajuan Not Found';
   };
 
+  // const token = localStorage.getItem('token');
+
   const fetchData = async () => {
+    const idl = localStorage.getItem('idl') || '';
+
     try {
       const response = await fetch(
-        'http://localhost:3000/api/kegiatan-penghasilan-orang-pribadi'
+        `/api/kegiatan-penghasilan-orang-pribadi?idl=${idl}`
       );
 
       if (!response.ok) {
@@ -89,7 +95,7 @@ const DataKegiatanPPh21: React.FC = () => {
   useEffect(() => {
     fetchData();
 
-    fetch('http://localhost:3000/api/pengajuan-anggaran')
+    fetch('/api/pengajuan-anggaran')
       .then((response) => response.json())
       .then(
         (data: {
@@ -105,18 +111,6 @@ const DataKegiatanPPh21: React.FC = () => {
       );
   }, []);
 
-  const formatIndonesianDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      weekday: 'long',
-    };
-
-    const date = new Date(dateString);
-    return date.toLocaleDateString('id-ID', options);
-  };
-
   const handleDelete = async (kodeKegiatanOP: string) => {
     MySwal.fire({
       title: 'Apakah Anda Yakin ?',
@@ -129,7 +123,7 @@ const DataKegiatanPPh21: React.FC = () => {
       cancelButtonText: 'Batal',
     }).then(async (result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
-        const url = `http://localhost:3000/api/kegiatan-penghasilan-orang-pribadi/${kodeKegiatanOP}`;
+        const url = `/api/kegiatan-penghasilan-orang-pribadi/${kodeKegiatanOP}`;
         const headers = {
           'Content-Type': 'application/json',
         };
@@ -248,8 +242,8 @@ const DataKegiatanPPh21: React.FC = () => {
                   col1: formatIndonesianDate(item.tanggalInput),
                   col2: item.uraianKegiatan,
                   col3: noPengajuan(item.idKegiatanAnggaran),
-                  col4: item.totalPotonganPajak,
-                  col5: item.totalPenghasilanBruto,
+                  col4: formatRupiah(item.totalPotonganPajak),
+                  col5: formatRupiah(item.totalPenghasilanBruto),
                   col6: <ActionsButtons kodeKegiatanOP={item.kodeKegiatanOP} />,
                 }))}
               />

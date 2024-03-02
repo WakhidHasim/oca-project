@@ -6,6 +6,7 @@ import { IoArrowUndoSharp } from 'react-icons/io5';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ButtonTabel from '../Button/ButtonTabel';
+// import { formatRupiah } from '../../utils/FormatRupiah';
 
 interface PengajuanAnggaran {
   idKegiatanAnggaran: string;
@@ -23,7 +24,7 @@ interface ObjekPajak {
 const FormTambahInventaris: React.FC = () => {
   const navigate = useNavigate();
 
-  const [buktiFile, setBuktiFile] = useState<File | null>(null);
+  const [fileBukti, setFileBukti] = useState<File | null>(null);
 
   const [optionsPengajuanAnggaran, setOptionsPengajuanAnggaran] = useState<
     { value: string; label: string }[]
@@ -32,12 +33,19 @@ const FormTambahInventaris: React.FC = () => {
     { value: string; label: string; tarifNpwp: number }[]
   >([]);
 
-  const selectedIdl = sessionStorage.getItem('selectedIdl') || '';
+  const optionsJenisPajak = [
+    { value: 'pph21', label: 'PPh 21' },
+    { value: 'pph23', label: 'PPh 23' },
+    { value: 'pph4Ayat2', label: 'PPh 4 Ayat 2' },
+  ];
+
+  const idl = localStorage.getItem('idl') || '';
 
   const [errors, setErrors] = useState({
     uraianKegiatan: '',
     idKegiatanAnggaran: '',
     nominalDPP: '',
+    jenisPajak: '',
     kodeObjek: '',
     nominalPajak: '',
     fileBukti: '',
@@ -50,6 +58,7 @@ const FormTambahInventaris: React.FC = () => {
     uraianKegiatan: '',
     idKegiatanAnggaran: '',
     nominalDPP: 0,
+    jenisPajak: '',
     kodeObjek: '',
     nominalPajak: 0,
     fileBukti: '',
@@ -66,7 +75,7 @@ const FormTambahInventaris: React.FC = () => {
     if (file) {
       switch (fileType) {
         case 'fileBukti':
-          setBuktiFile(file);
+          setFileBukti(file);
           setFormData({
             ...formData,
             fileBukti: file.name,
@@ -80,9 +89,7 @@ const FormTambahInventaris: React.FC = () => {
 
   const fetchPengajuanAnggaranOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/pengajuan-anggaran`
-      );
+      const response = await fetch(`/api/pengajuan-anggaran`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsPengajuanAnggaran = data.result.map(
@@ -100,7 +107,7 @@ const FormTambahInventaris: React.FC = () => {
 
   const fetchObjekPajakOptions = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/objek-pajak`);
+      const response = await fetch(`/api/objek-pajak`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const objekPajakOptions = data.result.map((objek: ObjekPajak) => ({
@@ -144,6 +151,13 @@ const FormTambahInventaris: React.FC = () => {
       isValid = false;
     } else {
       newErrors.nominalDPP = '';
+    }
+
+    if (!formData.jenisPajak) {
+      newErrors.jenisPajak = 'Jenis Pajak harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.jenisPajak = '';
     }
 
     if (!formData.kodeObjek) {
@@ -194,15 +208,16 @@ const FormTambahInventaris: React.FC = () => {
         formData.idKegiatanAnggaran
       );
       formDataToSubmit.append('nominalDPP', formData.nominalDPP.toString());
+      formDataToSubmit.append('jenisPajak', formData.jenisPajak);
       formDataToSubmit.append('kodeObjek', formData.kodeObjek);
       formDataToSubmit.append('nominalPajak', formData.nominalPajak.toString());
-      formDataToSubmit.append('fileBukti', buktiFile || '');
+      formDataToSubmit.append('fileBukti', fileBukti || '');
       formDataToSubmit.append('namaPemotong', formData.namaPemotong);
       formDataToSubmit.append('npwpPemotong', formData.npwpPemotong);
 
-      formDataToSubmit.append('idl', selectedIdl);
+      formDataToSubmit.append('idl', idl);
 
-      const url = 'http://localhost:3000/api/inventarisasi-pajak';
+      const url = '/api/inventarisasi-pajak';
       const response = await axios.post(url, formDataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -220,7 +235,7 @@ const FormTambahInventaris: React.FC = () => {
           setFormData({
             ...formData,
           });
-          toast.success('Data added successfully!');
+          toast.success('Data Berhasil Ditambahkan!');
           navigate('/inventaris');
         }
       }
@@ -293,7 +308,7 @@ const FormTambahInventaris: React.FC = () => {
           </label>
           <span className='text-red-500 p-1'>*</span>
           <input
-            type='number'
+            type='text'
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -304,6 +319,30 @@ const FormTambahInventaris: React.FC = () => {
           />
           {errors.nominalDPP && (
             <p className='text-red-500 text-sm'>{errors.nominalDPP}</p>
+          )}
+        </div>
+
+        <div className='mb-5 relative'>
+          <label className='inline-block font-semibold'>Jenis Pajak</label>
+          <span className='text-red-500 p-1'>*</span>
+          <Select
+            options={optionsJenisPajak}
+            isSearchable
+            isClearable
+            placeholder='Pilih Jenis Pajak'
+            onChange={(
+              selectedOption: SingleValue<{ value: string; label: string }>
+            ) => {
+              if (selectedOption) {
+                setFormData({
+                  ...formData,
+                  jenisPajak: selectedOption.value,
+                });
+              }
+            }}
+          />
+          {errors.jenisPajak && (
+            <p className='text-red-500 text-sm'>{errors.jenisPajak}</p>
           )}
         </div>
 
@@ -337,7 +376,7 @@ const FormTambahInventaris: React.FC = () => {
           </label>
           <span className='text-red-500 p-1'>*</span>
           <input
-            type='text'
+            type='number'
             onChange={(e) =>
               setFormData({
                 ...formData,

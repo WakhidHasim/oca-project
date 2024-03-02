@@ -7,16 +7,6 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import ButtonTabel from '../Button/ButtonTabel';
 
-type SelectedWPOP = {
-  value: string;
-  label: string;
-  npwp: string;
-  statusPegawai: string;
-  namaRekening: string;
-  noRekening: string;
-  bankTransfer: string;
-} | null;
-
 type SelectedObjekPajak = {
   value: string;
   label: string;
@@ -65,7 +55,6 @@ const FormTambahDataPenerima: React.FC = () => {
 
   const optionsMetodePotong = [{ value: 'no1', label: 'Pegawai Tetap' }];
 
-  const [selectedWpop, setSelectedWpop] = useState<SelectedWPOP>(null);
   const [selectedObjekPajak, setSelectedObjekPajak] =
     useState<SelectedObjekPajak>(null);
   const [potonganPajak, setPotonganPajak] = useState<number | null>(null);
@@ -213,22 +202,6 @@ const FormTambahDataPenerima: React.FC = () => {
             isSearchable
             isClearable
             placeholder='Pilih Nama Penerima'
-            onChange={(
-              selectedOption: SingleValue<{ value: string; label: string }>
-            ) => {
-              if (selectedOption) {
-                setFormData({
-                  ...formData,
-                  kodeWPOP: selectedOption.value,
-                });
-                const selectedWpop = optionsWpop.find(
-                  (objek: { value: string; label: string }) =>
-                    objek.value === selectedOption.value
-                ) as setSelectedWpop;
-
-                setsetSelectedWpop(selectedWpop);
-              }
-            }}
           />
         </div>
 
@@ -238,7 +211,6 @@ const FormTambahDataPenerima: React.FC = () => {
           </label>
           <input
             type='text'
-            value={selectedWpop?.statusPegawai || ''}
             disabled
             className='w-full p-2 border rounded-md  disabled:bg-gray-200'
           />
@@ -248,7 +220,6 @@ const FormTambahDataPenerima: React.FC = () => {
           <label className='inline-block font-semibold'>NPWP</label>
           <input
             type='text'
-            value={selectedWpop?.npwp || ''}
             disabled
             className='w-full p-2 border rounded-md  disabled:bg-gray-200'
           />
@@ -260,13 +231,6 @@ const FormTambahDataPenerima: React.FC = () => {
           </label>
           <input
             type='text'
-            value={
-              selectedWpop
-                ? `${selectedWpop.bankTransfer || ''} - ${
-                    selectedWpop.noRekening || ''
-                  } - ${selectedWpop.namaRekening || ''}`
-                : ''
-            }
             disabled
             className='w-full p-2 border rounded-md  disabled:bg-gray-200'
           />

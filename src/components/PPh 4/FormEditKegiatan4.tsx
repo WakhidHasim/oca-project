@@ -114,7 +114,7 @@ const FormEditKegiatan4: React.FC = () => {
 
   const [selectedPICValue, setSelectedPICValue] = useState<string>('');
 
-  const [formData, setFormData] = useState({
+  const [errors, setErrors] = useState({
     uraianKegiatan: '',
     idKegiatanAnggaran: '',
     kodeJenisPenghasilan: '',
@@ -123,8 +123,28 @@ const FormEditKegiatan4: React.FC = () => {
     penghasilanBruto: '',
     kodeObjek: '',
     invoice: '',
+    dokumenKerjasamaKegiatan: '',
+  });
+
+  const [formData, setFormData] = useState({
+    uraianKegiatan: '',
+    idKegiatanAnggaran: '',
+    kodeJenisPenghasilan: '',
+    picPencairanPenghasilan: '',
+    kodeWajibPajakBadanUsaha: '',
+    npwp: '',
+    noRekening: '',
+    namaRekening: '',
+    bankTransfer: '',
+    penghasilanBruto: '',
+    kodeObjek: '',
+    tarifPajak: 0,
+    potonganPajak: 0,
+    penghasilanDiterima: 0,
+    invoice: '',
     fakturPajak: '',
     dokumenKerjasamaKegiatan: '',
+    idl: '',
   });
 
   const handleFileUpload = (
@@ -164,9 +184,7 @@ const FormEditKegiatan4: React.FC = () => {
 
   const fetchJenisPenghasilanOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/jenis-penghasilan/pph4-ayat-2`
-      );
+      const response = await fetch(`/api/jenis-penghasilan/pph4-ayat-2`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsjenisPenghasilan = data.result.map(
@@ -184,9 +202,7 @@ const FormEditKegiatan4: React.FC = () => {
 
   const fetchPengajuanAnggaranOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/pengajuan-anggaran`
-      );
+      const response = await fetch(`/api/pengajuan-anggaran`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsPengajuanAnggaran = data.result.map(
@@ -204,9 +220,7 @@ const FormEditKegiatan4: React.FC = () => {
 
   const fetchObjekPajakOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/objek-pajak/pph4-ayat-2`
-      );
+      const response = await fetch(`/api/objek-pajak/pph4-ayat-2`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const objekPajakOptions = data.result.map((objek: ObjekPajak) => ({
@@ -223,9 +237,7 @@ const FormEditKegiatan4: React.FC = () => {
 
   const fetchBadanUsahaOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/wajib-pajak-badan-usaha`
-      );
+      const response = await fetch(`/api/wajib-pajak-badan-usaha`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsBadanUsaha = data.result.map((objek: BadanUsaha) => ({
@@ -254,7 +266,7 @@ const FormEditKegiatan4: React.FC = () => {
     const fetchPPh4Ayat2 = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/kegiatan-penghasilan-badan/pph4/${kodeKegiatanBadan}`
+          `/api/kegiatan-penghasilan-badan/pph4/${kodeKegiatanBadan}`
         );
         const data = await response.json();
 
@@ -272,11 +284,19 @@ const FormEditKegiatan4: React.FC = () => {
           kodeJenisPenghasilan: data.result.kodeJenisPenghasilan.toString(),
           picPencairanPenghasilan: data.result.picPencairanPenghasilan,
           kodeWajibPajakBadanUsaha: data.result.kodeWajibPajakBadanUsaha,
+          npwp: data.result.npwp,
+          noRekening: data.result.noRekening,
+          namaRekening: data.result.namaRekening,
+          bankTransfer: data.result.bankTransfer,
           penghasilanBruto: data.result.penghasilanBruto.toString(),
           kodeObjek: data.result.kodeObjek,
+          tarifPajak: data.result.tarifPajak,
+          potonganPajak: data.result.potonganPajak,
+          penghasilanDiterima: data.result.penghasilanDiterima,
           invoice: data.result.invoice,
           fakturPajak: data.result.fakturPajak,
           dokumenKerjasamaKegiatan: data.result.dokumenKerjasamaKegiatan,
+          idl: data.result.idl,
         });
       } catch (error) {
         console.error('Error fetching Badan Usaha options:', error);
@@ -320,6 +340,80 @@ const FormEditKegiatan4: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    if (!formData.uraianKegiatan) {
+      newErrors.uraianKegiatan = 'Uraian Kegiatan harus diisi';
+      isValid = false;
+    } else {
+      newErrors.uraianKegiatan = '';
+    }
+
+    if (!formData.kodeJenisPenghasilan) {
+      newErrors.kodeJenisPenghasilan = 'Jenis Penghasilan harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.kodeJenisPenghasilan = '';
+    }
+
+    if (!formData.idKegiatanAnggaran) {
+      newErrors.idKegiatanAnggaran = 'Pengajuan Anggaran harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.idKegiatanAnggaran = '';
+    }
+
+    if (!formData.kodeWajibPajakBadanUsaha) {
+      newErrors.kodeWajibPajakBadanUsaha = 'Nama Badan Usaha harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.kodeWajibPajakBadanUsaha = '';
+    }
+
+    if (!formData.kodeObjek) {
+      newErrors.kodeObjek = 'Objek Pajak harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.kodeObjek = '';
+    }
+
+    if (!formData.penghasilanBruto) {
+      newErrors.penghasilanBruto = 'Penghasilan Bruto harus diisi';
+      isValid = false;
+    } else {
+      newErrors.penghasilanBruto = '';
+    }
+
+    if (!formData.picPencairanPenghasilan) {
+      newErrors.picPencairanPenghasilan =
+        'PIC Pencairan Penghasilan harus dipilih';
+      isValid = false;
+    } else {
+      newErrors.picPencairanPenghasilan = '';
+    }
+
+    if (!formData.invoice) {
+      newErrors.invoice = 'Invoice harus diisi';
+      isValid = false;
+    } else {
+      newErrors.invoice = '';
+    }
+
+    if (!formData.dokumenKerjasamaKegiatan) {
+      newErrors.dokumenKerjasamaKegiatan =
+        'Dokumen Kerjasama Kegiatan harus diisi';
+      isValid = false;
+    } else {
+      newErrors.dokumenKerjasamaKegiatan = '';
+    }
+
+    if (!isValid) {
+      setErrors(newErrors);
+      return;
+    }
+
     try {
       const formDataToSubmit = new FormData();
       formDataToSubmit.append('kodeKegiatanBadan', kodeKegiatanBadan);
@@ -352,12 +446,15 @@ const FormEditKegiatan4: React.FC = () => {
         dokumenKerjasamaFile ? dokumenKerjasamaFile : ''
       );
 
-      const url = `http://localhost:3000/api/kegiatan-penghasilan-badan/pph4/${kodeKegiatanBadan}`;
+      const url = `/api/kegiatan-penghasilan-badan/pph4/${kodeKegiatanBadan}`;
       const response = await axios.put(url, formDataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+
+      console.log(formDataToSubmit);
+
       // Handle response
       if (response.status === 200 && response.data) {
         const responseData = response.data;
@@ -369,7 +466,7 @@ const FormEditKegiatan4: React.FC = () => {
           setFormData({
             ...formData,
           });
-          toast.success('Data added successfully!');
+          toast.success('Data Berhasil Diupdate!');
           navigate('/kegiatanPPh4');
         }
       }
@@ -410,6 +507,11 @@ const FormEditKegiatan4: React.FC = () => {
               }
             }}
           />
+          {errors.kodeJenisPenghasilan && (
+            <p className='text-red-500 text-sm'>
+              {errors.kodeJenisPenghasilan}
+            </p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -435,6 +537,9 @@ const FormEditKegiatan4: React.FC = () => {
             }
             className='w-full p-2 mt-2 border rounded-md text-sm'
           />
+          {errors.uraianKegiatan && (
+            <p className='text-red-500 text-sm'>{errors.uraianKegiatan}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -465,6 +570,9 @@ const FormEditKegiatan4: React.FC = () => {
               }
             }}
           />
+          {errors.idKegiatanAnggaran && (
+            <p className='text-red-500 text-sm'>{errors.idKegiatanAnggaran}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -498,34 +606,53 @@ const FormEditKegiatan4: React.FC = () => {
               }
             }}
           />
+          {errors.kodeWajibPajakBadanUsaha && (
+            <p className='text-red-500 text-sm'>
+              {errors.kodeWajibPajakBadanUsaha}
+            </p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
           <label className='inline-block font-semibold'>NPWP</label>
           <input
             type='text'
-            value={selectedBadanUsaha?.npwp || ''}
+            value={selectedBadanUsaha?.npwp || formData.npwp}
             disabled
             className='w-full p-2 border rounded-md  disabled:bg-gray-200'
           />
         </div>
 
-        <div className='mb-5 relative'>
-          <label className='inline-block font-semibold'>
-            Identitas Rekening
-          </label>
-          <input
-            type='text'
-            value={
-              selectedBadanUsaha
-                ? `${selectedBadanUsaha.bankTransfer || ''} - ${
-                    selectedBadanUsaha.noRekening || ''
-                  } - ${selectedBadanUsaha.namaRekening || ''}`
-                : ''
-            }
-            disabled
-            className='w-full p-2 border rounded-md  disabled:bg-gray-200'
-          />
+        <div className='flex flex-wrap gap-5 mb-5'>
+          <div className='mb-5 relative'>
+            <label className='inline-block font-semibold'>Nama Bank</label>
+            <input
+              type='text'
+              value={selectedBadanUsaha?.bankTransfer || formData.bankTransfer}
+              disabled
+              className='w-full p-2 border rounded-md  disabled:bg-gray-200'
+            />
+          </div>
+
+          <div className='mb-5 relative'>
+            <label className='inline-block font-semibold'>No Rekening</label>
+            <input
+              type='text'
+              value={selectedBadanUsaha?.noRekening || formData.noRekening}
+              disabled
+              className='w-full p-2 border rounded-md  disabled:bg-gray-200'
+            />
+          </div>
+
+          <div className='mb-5 relative'>
+            <label className='inline-block font-semibold'>Nama Rekening</label>
+            <input
+              type='text'
+              value={selectedBadanUsaha?.namaRekening || formData.namaRekening}
+              disabled
+              className='w-full p-2 border rounded-md  disabled:bg-gray-200'
+            />
+          </div>
         </div>
 
         <div className='mb-5 relative'>
@@ -556,6 +683,9 @@ const FormEditKegiatan4: React.FC = () => {
               }
             }}
           />
+          {errors.kodeObjek && (
+            <p className='text-red-500 text-sm'>{errors.kodeObjek}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -570,50 +700,58 @@ const FormEditKegiatan4: React.FC = () => {
             onChange={handlePenghasilanBrutoChange}
             className='w-full p-2 border rounded-md mt-2 text-sm'
           />
+          {errors.penghasilanBruto && (
+            <p className='text-red-500 text-sm'>{errors.penghasilanBruto}</p>
+          )}
         </div>
-        <div className='mb-5 relative'>
-          <label className='inline-block font-semibold text-base mb-2'>
-            Tarif Pajak
-          </label>
-          <input
-            type='text'
-            value={
-              selectedObjekPajak?.tarifNpwp
-                ? `${selectedObjekPajak.tarifNpwp}%`
-                : ''
-            }
-            disabled
-            className='w-full p-2 border rounded-md mt-2 text-sm disabled:bg-gray-200'
-          />
+
+        <div className='flex flex-wrap gap-5 mb-5'>
+          <div className='mb-5 relative'>
+            <label className='inline-block font-semibold text-base mb-2'>
+              Tarif Pajak
+            </label>
+            <input
+              type='text'
+              value={
+                selectedObjekPajak?.tarifNpwp
+                  ? `${selectedObjekPajak.tarifNpwp}%`
+                  : `${formData.tarifPajak}%`
+              }
+              disabled
+              className='w-full p-2 border rounded-md mt-2 text-sm disabled:bg-gray-200'
+            />
+          </div>
+
+          <div className='mb-5 relative'>
+            <label className='inline-block font-semibold text-base mb-2'>
+              Potongan Pajak
+            </label>
+            <input
+              type='text'
+              value={formatRupiah(potonganPajak || formData.potonganPajak)}
+              disabled
+              className='w-full p-2 border rounded-md mt-2 disabled:bg-gray-200 text-sm'
+            />
+          </div>
+
+          <div className='mb-5 relative'>
+            <label className='inline-block font-semibold text-base mb-2'>
+              Penghasilan Diterima
+            </label>
+            <input
+              type='text'
+              value={formatRupiah(
+                penghasilanDiterima || formData.penghasilanDiterima
+              )}
+              disabled
+              className='w-full p-2 border rounded-md mt-2 text-sm disabled:bg-gray-200'
+            />
+          </div>
         </div>
 
         <div className='mb-5 relative'>
           <label className='inline-block font-semibold text-base mb-2'>
-            Potongan Pajak
-          </label>
-          <input
-            type='text'
-            value={formatRupiah(potonganPajak)}
-            disabled
-            className='w-full p-2 border rounded-md mt-2 disabled:bg-gray-200 text-sm'
-          />
-        </div>
-
-        <div className='mb-5 relative'>
-          <label className='inline-block font-semibold text-base mb-2'>
-            Penghasilan Diterima
-          </label>
-          <input
-            type='text'
-            value={formatRupiah(penghasilanDiterima)}
-            disabled
-            className='w-full p-2 border rounded-md mt-2 text-sm disabled:bg-gray-200'
-          />
-        </div>
-
-        <div className='mb-5 relative'>
-          <label className='inline-block font-semibold text-base mb-2'>
-            PIC (Pencaiiran Penghasilan)
+            PIC (Pencairan Penghasilan)
           </label>
           <span className='text-red-500 p-1'>*</span>
           <Select
@@ -637,6 +775,11 @@ const FormEditKegiatan4: React.FC = () => {
               }
             }}
           />
+          {errors.picPencairanPenghasilan && (
+            <p className='text-red-500 text-sm'>
+              {errors.picPencairanPenghasilan}
+            </p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
@@ -644,18 +787,31 @@ const FormEditKegiatan4: React.FC = () => {
             Upload Dokumen Invoice
           </label>
           <span className='text-red-500 p-1'>*</span>
+          {formData.invoice ? (
+            <p className='text-sm block mt-1'>{formData.invoice}</p>
+          ) : (
+            ''
+          )}
           <input
             type='file'
             id='invoice'
             className='w-full p-2 border rounded-md text-sm mt-2'
             onChange={(e) => handleFileUpload(e, 'invoice')}
           />
+          {errors.invoice && (
+            <p className='text-red-500 text-sm'>{errors.invoice}</p>
+          )}
         </div>
 
         <div className='mb-5 relative'>
           <label className='inline-block font-semibold text-base mb-2'>
             Upload Dokumen Faktur Pajak
           </label>
+          {formData.fakturPajak ? (
+            <p className='text-sm block mt-1'>{formData.fakturPajak}</p>
+          ) : (
+            ''
+          )}
           <input
             type='file'
             id='fakturPajak'
@@ -668,12 +824,25 @@ const FormEditKegiatan4: React.FC = () => {
           <label className='inline-block font-semibold text-base mb-2'>
             Upload Dokumen Kerjasama Kegiatan
           </label>
+          <span className='text-red-500 p-1'>*</span>
+          {formData.dokumenKerjasamaKegiatan ? (
+            <p className='text-sm block mt-1'>
+              {formData.dokumenKerjasamaKegiatan}
+            </p>
+          ) : (
+            ''
+          )}
           <input
             type='file'
             id='dokumenKerjasamaKegiatan'
             className='w-full p-2 border rounded-md text-sm mt-2'
             onChange={(e) => handleFileUpload(e, 'dokumenKerjasamaKegiatan')}
           />
+          {errors.dokumenKerjasamaKegiatan && (
+            <p className='text-red-500 text-sm'>
+              {errors.dokumenKerjasamaKegiatan}
+            </p>
+          )}
         </div>
         <div className='flex gap-5 justify-start pt-8 text-white '>
           <Link to='/kegiatanPPh4'>

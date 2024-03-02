@@ -8,6 +8,8 @@ import { FaEdit } from 'react-icons/fa';
 import { FaPlus } from 'react-icons/fa6';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { Link, useNavigate } from 'react-router-dom';
+import { formatIndonesianDate } from '../../utils/FormatIndonesianDate';
+import { formatRupiah } from '../../utils/FormatRupiah';
 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -83,7 +85,7 @@ const DataKegiatan23: React.FC = () => {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/kegiatan-penghasilan-badan/pph23?idl=${idl}`
+        `/api/kegiatan-penghasilan-badan/pph23?idl=${idl}`
       );
 
       if (!response.ok) {
@@ -106,7 +108,7 @@ const DataKegiatan23: React.FC = () => {
   useEffect(() => {
     fetchData();
 
-    fetch('http://localhost:3000/api/wajib-pajak-badan-usaha')
+    fetch('/api/wajib-pajak-badan-usaha')
       .then((response) => response.json())
       .then(
         (data: {
@@ -122,18 +124,6 @@ const DataKegiatan23: React.FC = () => {
       );
   }, []);
 
-  const formatIndonesianDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      weekday: 'long',
-    };
-
-    const date = new Date(dateString);
-    return date.toLocaleDateString('id-ID', options);
-  };
-
   const handleDelete = async (kodeKegiatanBadan: string) => {
     MySwal.fire({
       title: 'Apakah Anda Yakin ?',
@@ -146,7 +136,7 @@ const DataKegiatan23: React.FC = () => {
       cancelButtonText: 'Batal',
     }).then(async (result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
-        const url = `http://localhost:3000/api/kegiatan-penghasilan-badan/pph23/${kodeKegiatanBadan}`;
+        const url = `/api/kegiatan-penghasilan-badan/pph23/${kodeKegiatanBadan}`;
         const headers = {
           'Content-Type': 'application/json',
         };
@@ -173,17 +163,6 @@ const DataKegiatan23: React.FC = () => {
         }
       }
     });
-  };
-
-  const formatCurrency = (amount: number): string => {
-    // Format number to currency string
-    const formattedAmount = new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-    }).format(amount);
-
-    return formattedAmount;
   };
 
   const handleEditClick = (kodeKegiatanBadan: string) => {
@@ -270,7 +249,7 @@ const DataKegiatan23: React.FC = () => {
                   col1: formatIndonesianDate(item.tanggalInput),
                   col2: item.uraianKegiatan,
                   col3: mapNamaBadan(item.kodeWPBadan),
-                  col4: formatCurrency(item.penghasilanBruto),
+                  col4: formatRupiah(item.penghasilanBruto),
                   col5: (
                     <ActionsButtons
                       kodeKegiatanBadan={item.kodeKegiatanBadan}

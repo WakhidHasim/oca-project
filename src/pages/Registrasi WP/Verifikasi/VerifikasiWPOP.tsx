@@ -1,40 +1,40 @@
 import React from 'react';
 import TabelData from '../../../components/Tabel/TabelData';
 import { IoIosArrowForward } from 'react-icons/io';
-import ButtonTabel from '../../../components/Button/ButtonTabel';
+// import ButtonTabel from '../../../components/Button/ButtonTabel';
 import SearchBar from '../../../components/Search/SearchBar';
-import { MdDone, MdOutlineClose } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { TbListDetails } from 'react-icons/tb';
+// import { MdDone, MdOutlineClose } from 'react-icons/md';
+// import { Link } from 'react-router-dom';
+// import { TbListDetails } from 'react-icons/tb';
 
 const VerifikasiWPOP: React.FC = () => {
-  const ActionsButtons: React.FC = () => (
-    <div className='flex space-x-2 justify-center items-center text-white'>
-      <Link to=''>
-        <ButtonTabel
-          text='Detail'
-          icon={<TbListDetails size={16} />}
-          bgColor='bg-detail'
-        />
-      </Link>
+  // const ActionsButtons: React.FC = () => (
+  //   <div className='flex space-x-2 justify-center items-center text-white'>
+  //     <Link to=''>
+  //       <ButtonTabel
+  //         text='Detail'
+  //         icon={<TbListDetails size={16} />}
+  //         bgColor='bg-detail'
+  //       />
+  //     </Link>
 
-      <Link to=''>
-        <ButtonTabel
-          text='Approve'
-          icon={<MdDone size={16} />}
-          bgColor='bg-approve'
-        />
-      </Link>
+  //     <Link to=''>
+  //       <ButtonTabel
+  //         text='Approve'
+  //         icon={<MdDone size={16} />}
+  //         bgColor='bg-approve'
+  //       />
+  //     </Link>
 
-      <Link to=''>
-        <ButtonTabel
-          text='Reject'
-          icon={<MdOutlineClose size={16} />}
-          bgColor='bg-delete'
-        />
-      </Link>
-    </div>
-  );
+  //     <Link to=''>
+  //       <ButtonTabel
+  //         text='Reject'
+  //         icon={<MdOutlineClose size={16} />}
+  //         bgColor='bg-delete'
+  //       />
+  //     </Link>
+  //   </div>
+  // );
 
   const columns = ['No', 'Nama Pegawai', 'Golongan WP', 'NIK', 'NPWP', 'Aksi'];
   const data: {

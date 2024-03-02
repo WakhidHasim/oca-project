@@ -22,7 +22,7 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3000/api/agent/login', {
+      const response = await fetch('/api/agent/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

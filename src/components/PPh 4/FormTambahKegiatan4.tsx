@@ -6,6 +6,7 @@ import { IoArrowUndoSharp } from 'react-icons/io5';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ButtonTabel from '../Button/ButtonTabel';
+import { formatRupiah } from '../../utils/FormatRupiah';
 
 type SelectedBadanUsaha = {
   value: string;
@@ -150,7 +151,7 @@ const FormTambahKegaiatn4: React.FC = () => {
           setDokumenKerjasamaFile(file);
           setFormData({
             ...formData,
-            dokumenKerjasamaKegiatan: file.name, // Menyimpan hanya nama file
+            dokumenKerjasamaKegiatan: file.name,
           });
           break;
         default:
@@ -161,9 +162,7 @@ const FormTambahKegaiatn4: React.FC = () => {
 
   const fetchJenisPenghasilanOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/jenis-penghasilan/pph4-ayat-2`
-      );
+      const response = await fetch(`/api/jenis-penghasilan/pph4-ayat-2`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsjenisPenghasilan = data.result.map(
@@ -181,9 +180,7 @@ const FormTambahKegaiatn4: React.FC = () => {
 
   const fetchPengajuanAnggaranOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/pengajuan-anggaran`
-      );
+      const response = await fetch(`/api/pengajuan-anggaran`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsPengajuanAnggaran = data.result.map(
@@ -201,9 +198,7 @@ const FormTambahKegaiatn4: React.FC = () => {
 
   const fetchObjekPajakOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/objek-pajak/pph4-ayat-2`
-      );
+      const response = await fetch(`/api/objek-pajak/pph4-ayat-2`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const objekPajakOptions = data.result.map((objek: ObjekPajak) => ({
@@ -220,9 +215,7 @@ const FormTambahKegaiatn4: React.FC = () => {
 
   const fetchBadanUsahaOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/wajib-pajak-badan-usaha`
-      );
+      const response = await fetch(`/api/wajib-pajak-badan-usaha`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsBadanUsaha = data.result.map((objek: BadanUsaha) => ({
@@ -267,17 +260,6 @@ const FormTambahKegaiatn4: React.FC = () => {
       setPenghasilanDiterima(null);
     }
   }, [formData.penghasilanBruto, selectedObjekPajak]);
-
-  const formatRupiah = (value: number | null) => {
-    if (value === null) return '';
-    const formatter = new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-    return formatter.format(value);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -387,7 +369,7 @@ const FormTambahKegaiatn4: React.FC = () => {
       );
       formDataToSubmit.append('idl', idl);
 
-      const url = 'http://localhost:3000/api/kegiatan-penghasilan-badan/pph4';
+      const url = '/api/kegiatan-penghasilan-badan/pph4';
       const response = await axios.post(url, formDataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -405,7 +387,7 @@ const FormTambahKegaiatn4: React.FC = () => {
           setFormData({
             ...formData,
           });
-          toast.success('Data added successfully!');
+          toast.success('Data Berhasil Ditambah!');
           navigate('/kegiatanPPh4');
         }
       }
@@ -678,7 +660,7 @@ const FormTambahKegaiatn4: React.FC = () => {
 
         <div className='mb-5 relative'>
           <label className='inline-block font-semibold text-base mb-2'>
-            Upload Dokumen Invoice
+            Upload Dokumen Invoice (.pdf)
           </label>
           <span className='text-red-500 p-1'>*</span>
           <input
@@ -694,7 +676,7 @@ const FormTambahKegaiatn4: React.FC = () => {
 
         <div className='mb-5 relative'>
           <label className='inline-block font-semibold text-base mb-2'>
-            Upload Dokumen Faktur Pajak
+            Upload Dokumen Faktur Pajak (.pdf)
           </label>
           <input
             type='file'
@@ -706,7 +688,7 @@ const FormTambahKegaiatn4: React.FC = () => {
 
         <div className='mb-5 relative'>
           <label className='inline-block font-semibold text-base mb-2'>
-            Upload Dokumen Kerjasama Kegiatan
+            Upload Dokumen Kerjasama Kegiatan (.pdf)
           </label>
           <input
             type='file'

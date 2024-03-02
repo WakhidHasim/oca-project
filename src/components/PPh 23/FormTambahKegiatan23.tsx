@@ -6,6 +6,7 @@ import { IoArrowUndoSharp } from 'react-icons/io5';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ButtonTabel from '../Button/ButtonTabel';
+import { formatRupiah } from '../../utils/FormatRupiah';
 
 type SelectedBadanUsaha = {
   value: string;
@@ -161,9 +162,7 @@ const FormTambahKegiatan23: React.FC = () => {
 
   const fetchJenisPenghasilanOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/jenis-penghasilan/pph23`
-      );
+      const response = await fetch(`/api/jenis-penghasilan/pph23`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsjenisPenghasilan = data.result.map(
@@ -181,9 +180,7 @@ const FormTambahKegiatan23: React.FC = () => {
 
   const fetchPengajuanAnggaranOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/pengajuan-anggaran`
-      );
+      const response = await fetch(`/api/pengajuan-anggaran`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsPengajuanAnggaran = data.result.map(
@@ -201,9 +198,7 @@ const FormTambahKegiatan23: React.FC = () => {
 
   const fetchObjekPajakOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/objek-pajak/pph23`
-      );
+      const response = await fetch(`/api/objek-pajak/pph23`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const objekPajakOptions = data.result.map((objek: ObjekPajak) => ({
@@ -220,9 +215,7 @@ const FormTambahKegiatan23: React.FC = () => {
 
   const fetchBadanUsahaOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/wajib-pajak-badan-usaha`
-      );
+      const response = await fetch(`/api/wajib-pajak-badan-usaha`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsBadanUsaha = data.result.map((objek: BadanUsaha) => ({
@@ -267,17 +260,6 @@ const FormTambahKegiatan23: React.FC = () => {
       setPenghasilanDiterima(null);
     }
   }, [formData.penghasilanBruto, selectedObjekPajak]);
-
-  const formatRupiah = (value: number | null) => {
-    if (value === null) return '';
-    const formatter = new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-    return formatter.format(value);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -387,7 +369,7 @@ const FormTambahKegiatan23: React.FC = () => {
       );
       formDataToSubmit.append('idl', idl);
 
-      const url = 'http://localhost:3000/api/kegiatan-penghasilan-badan/pph23';
+      const url = '/api/kegiatan-penghasilan-badan/pph23';
       const response = await axios.post(url, formDataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -405,7 +387,7 @@ const FormTambahKegiatan23: React.FC = () => {
           setFormData({
             ...formData,
           });
-          toast.success('Data added successfully!');
+          toast.success('Data Berhasil Ditambah!');
           navigate('/dataKegiatan23');
         }
       }

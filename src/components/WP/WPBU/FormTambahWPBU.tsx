@@ -283,6 +283,10 @@ const FormTambahWPBU: React.FC = () => {
         fileFotoBuktiRekening ? fileFotoBuktiRekening : ''
       );
       formDataToSubmit.append('fileFotoNpwp', fileFotoNpwp ? fileFotoNpwp : '');
+      formDataToSubmit.append(
+        'masaBerlakuBebasPPh23',
+        formData.masaBerlakuBebasPPh23
+      );
       if (formData.adaSkbPPh23 === 'ya') {
         formDataToSubmit.append(
           'masaBerlakuBebasPPh23',

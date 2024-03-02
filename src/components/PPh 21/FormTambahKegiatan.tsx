@@ -56,9 +56,7 @@ const FormTambahKegiatan: React.FC = () => {
 
   const fetchJenisPenghasilanOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/jenis-penghasilan/pph21`
-      );
+      const response = await fetch(`/api/jenis-penghasilan/pph21`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsjenisPenghasilan = data.result.map(
@@ -76,9 +74,7 @@ const FormTambahKegiatan: React.FC = () => {
 
   const fetchPengajuanAnggaranOptions = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/pengajuan-anggaran`
-      );
+      const response = await fetch(`/api/pengajuan-anggaran`);
       const data = await response.json();
       if (data && data.result && data.result.length > 0) {
         const optionsPengajuanAnggaran = data.result.map(
@@ -140,8 +136,7 @@ const FormTambahKegiatan: React.FC = () => {
     }
 
     try {
-      const url =
-        'http://localhost:3000/api/kegiatan-penghasilan-orang-pribadi';
+      const url = '/api/kegiatan-penghasilan-orang-pribadi';
 
       const response = await axios.post(url, formData, {
         headers: {
@@ -161,7 +156,7 @@ const FormTambahKegiatan: React.FC = () => {
             ...formData,
           });
 
-          toast.success('Data added successfully!');
+          toast.success('Data Berhasil Ditambah!');
           navigate('/dataKegiatan21');
         }
       }
