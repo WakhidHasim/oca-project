@@ -22,16 +22,19 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('/api/agent/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          password: password,
-        }),
-      });
+      const response = await fetch(
+        'http://103.86.100.20:3001/api/agent/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            password: password,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -69,6 +72,7 @@ const Login: React.FC = () => {
         }
       }
     } catch (error) {
+      // console.error('Error:', error.message);
       toast.error('User id atau password salah !!!');
     }
   };
