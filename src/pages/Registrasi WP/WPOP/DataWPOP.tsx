@@ -3,31 +3,31 @@ import TabelData from '../../../components/Tabel/TabelData';
 import { IoIosArrowForward } from 'react-icons/io';
 import ButtonTabel from '../../../components/Button/ButtonTabel';
 import SearchBar from '../../../components/Search/SearchBar';
-import { FaEdit } from 'react-icons/fa';
-import { RiDeleteBin6Fill } from 'react-icons/ri';
+// import { FaEdit } from 'react-icons/fa';
+// import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { FaPlus } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 
 const DataWPOP: React.FC = () => {
-  const ActionsButtons: React.FC = () => (
-    <div className='flex space-x-2 text-white items-center'>
-      <Link to='/editWPOP'>
-        <ButtonTabel
-          text='Edit'
-          icon={<FaEdit size={16} />}
-          bgColor='bg-orange'
-        />
-      </Link>
+  // const ActionsButtons: React.FC = () => (
+  //   <div className='flex space-x-2 text-white items-center'>
+  //     <Link to='/editWPOP'>
+  //       <ButtonTabel
+  //         text='Edit'
+  //         icon={<FaEdit size={16} />}
+  //         bgColor='bg-orange'
+  //       />
+  //     </Link>
 
-      <Link to=''>
-        <ButtonTabel
-          text='Hapus'
-          icon={<RiDeleteBin6Fill size={16} />}
-          bgColor='bg-delete'
-        />
-      </Link>
-    </div>
-  );
+  //     <Link to=''>
+  //       <ButtonTabel
+  //         text='Hapus'
+  //         icon={<RiDeleteBin6Fill size={16} />}
+  //         bgColor='bg-delete'
+  //       />
+  //     </Link>
+  //   </div>
+  // );
 
   const columns = ['No', 'Nama WPOP', 'NIK', 'NPWP', 'Bank Transfer', 'Aksi'];
   const data: {

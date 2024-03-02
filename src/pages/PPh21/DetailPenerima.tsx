@@ -7,7 +7,7 @@ import SearchBar from '../../components/Search/SearchBar';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { FaPlus } from 'react-icons/fa6';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -59,7 +59,7 @@ interface WajibPajakOrangPribadi {
 }
 
 const DetailPenerima: React.FC = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [apiData, setApiData] = useState<ApiData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
