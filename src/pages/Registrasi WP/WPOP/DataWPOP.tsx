@@ -1,43 +1,143 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TabelData from '../../../components/Tabel/TabelData';
 import { IoIosArrowForward } from 'react-icons/io';
 import ButtonTabel from '../../../components/Button/ButtonTabel';
 import SearchBar from '../../../components/Search/SearchBar';
-// import { FaEdit } from 'react-icons/fa';
-// import { RiDeleteBin6Fill } from 'react-icons/ri';
+import { FaEdit } from 'react-icons/fa';
+import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { FaPlus } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
+
+import { toast } from 'react-toastify';
+
+export type ApiData = {
+  kodeWajibPajakOrangPribadi: string;
+  nama: string;
+  email: string;
+  password?: string;
+  kewarganegaraan: string;
+  namaNegara: string;
+  idOrangPribadi: string;
+  namaIdentitas: string;
+  masaBerlakuPassport?: string;
+  npwp?: string;
+  namaNpwp?: string;
+  kotaNpwp?: string;
+  bankTransfer?: string;
+  noRekening?: string;
+  namaRekening?: string;
+  nip?: string;
+  statusPegawai?: string;
+  fileFotoNpwp?: string;
+  fileFotoIdOrangPribadi: string;
+  fileFotoBuktiRekening?: string;
+  isApproved: boolean;
+  tanggalInput?: string;
+};
+
 const DataWPOP: React.FC = () => {
-  // const ActionsButtons: React.FC = () => (
-  //   <div className='flex space-x-2 text-white items-center'>
-  //     <Link to='/editWPOP'>
-  //       <ButtonTabel
-  //         text='Edit'
-  //         icon={<FaEdit size={16} />}
-  //         bgColor='bg-orange'
-  //       />
-  //     </Link>
+  const [apiData, setApiData] = useState<ApiData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  //     <Link to=''>
-  //       <ButtonTabel
-  //         text='Hapus'
-  //         icon={<RiDeleteBin6Fill size={16} />}
-  //         bgColor='bg-delete'
-  //       />
-  //     </Link>
-  //   </div>
-  // );
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`/api/wpop`);
 
-  const columns = ['No', 'Nama WPOP', 'NIK', 'NPWP', 'Bank Transfer', 'Aksi'];
-  const data: {
-    id: number;
-    col1: string;
-    col2: string;
-    col3: string;
-    col4: string;
-    col5: React.ReactNode;
-  }[] = [];
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setApiData(data.result);
+      setLoading(false);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error fetching data:', error.message);
+      } else {
+        console.error('Unknown error:', error);
+      }
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleDelete = async (kodeWajibPajakOrangPribadi: string) => {
+    MySwal.fire({
+      title: 'Apakah Anda Yakin ?',
+      text: 'Data yang dihapus tidak bisa dikembalikan!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Hapus',
+      cancelButtonText: 'Batal',
+    }).then(async (result: { isConfirmed: boolean }) => {
+      if (result.isConfirmed) {
+        const url = `/api/wpop/${kodeWajibPajakOrangPribadi}`;
+        const headers = {
+          'Content-Type': 'application/json',
+        };
+
+        try {
+          const response = await fetch(url, {
+            method: 'DELETE',
+            headers,
+          });
+
+          if (!response.ok) {
+            throw new Error(`Error deleting data: ${response.status}`);
+          }
+
+          fetchData();
+          toast.success('Data Berhasil Dihapus!');
+        } catch (error) {
+          console.error('Error deleting data:', error);
+          MySwal.fire(
+            'Error',
+            'Failed to delete data. Please try again.',
+            'error'
+          );
+        }
+      }
+    });
+  };
+
+  const ActionsButtons: React.FC<{ kodeWajibPajakOrangPribadi: string }> = ({
+    kodeWajibPajakOrangPribadi,
+  }) => (
+    <div className='flex space-x-2 text-white items-center'>
+      <Link to='/editWPOP'>
+        <ButtonTabel
+          text='Edit'
+          icon={<FaEdit size={16} />}
+          bgColor='bg-orange'
+        />
+      </Link>
+
+      <ButtonTabel
+        onClick={() => handleDelete(kodeWajibPajakOrangPribadi)}
+        text='Hapus'
+        icon={<RiDeleteBin6Fill size={16} />}
+        bgColor='bg-delete'
+      />
+    </div>
+  );
+
+  const columns = [
+    'No',
+    'Nama WPOP',
+    'ID Orang Pajak Pribadi',
+    'NPWP',
+    'Bank Transfer',
+    'Aksi',
+  ];
 
   return (
     <div className='pl-4 lg:pl-60 xl:pl-72 pt-24 xl:pt-28 w-full min-h-screen relative'>
@@ -74,7 +174,27 @@ const DataWPOP: React.FC = () => {
                 </div>
               </div>
             </div>
-            <TabelData columns={columns} data={data} />
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <TabelData
+                columns={columns}
+                data={apiData.map((item, index) => ({
+                  id: index + 1,
+                  col1: item.nama,
+                  col2: item.idOrangPribadi,
+                  col3: item.npwp,
+                  col4: item.bankTransfer,
+                  col5: (
+                    <ActionsButtons
+                      kodeWajibPajakOrangPribadi={
+                        item.kodeWajibPajakOrangPribadi
+                      }
+                    />
+                  ),
+                }))}
+              />
+            )}
           </div>
         </div>
       </div>

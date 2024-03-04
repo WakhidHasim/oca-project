@@ -1,4 +1,4 @@
-export const formatRupiah = (value: number | null) => {
+export const currencyRupiah = (value: number | null) => {
   if (value === null) return '';
   const formatter = new Intl.NumberFormat('id-ID', {
     style: 'currency',

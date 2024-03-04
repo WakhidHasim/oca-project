@@ -6,6 +6,7 @@ import { IoArrowUndoSharp } from 'react-icons/io5';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ButtonTabel from '../Button/ButtonTabel';
+import { currencyRupiah } from '../../utils/FormatRupiah';
 
 type SelectedBadanUsaha = {
   value: string;
@@ -65,6 +66,8 @@ const FormEditKegiatan4: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const kodeKegiatanBadan = location?.state?.kodeKegiatanBadan || '';
+
+  console.log(kodeKegiatanBadan);
 
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
   const [fakturPajakFile, setFakturPajakFile] = useState<File | null>(null);
@@ -334,17 +337,6 @@ const FormEditKegiatan4: React.FC = () => {
       setPenghasilanDiterima(null);
     }
   }, [formData.penghasilanBruto, selectedObjekPajak]);
-
-  const formatRupiah = (value: number | null) => {
-    if (value === null) return '';
-    const formatter = new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-    return formatter.format(value);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -734,7 +726,7 @@ const FormEditKegiatan4: React.FC = () => {
             </label>
             <input
               type='text'
-              value={formatRupiah(potonganPajak || formData.potonganPajak)}
+              value={currencyRupiah(potonganPajak || formData.potonganPajak)}
               disabled
               className='w-full p-2 border rounded-md mt-2 disabled:bg-gray-200 text-sm'
             />
@@ -746,7 +738,7 @@ const FormEditKegiatan4: React.FC = () => {
             </label>
             <input
               type='text'
-              value={formatRupiah(
+              value={currencyRupiah(
                 penghasilanDiterima || formData.penghasilanDiterima
               )}
               disabled

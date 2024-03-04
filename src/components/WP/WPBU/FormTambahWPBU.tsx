@@ -299,7 +299,7 @@ const FormTambahWPBU: React.FC = () => {
       }
       formDataToSubmit.append('statusPkp', formData.statusPkp);
 
-      const url = 'http://localhost:3000/api/wajib-pajak-badan-usaha';
+      const url = '/api/wajib-pajak-badan-usaha';
       const response = await axios.post(url, formDataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data',

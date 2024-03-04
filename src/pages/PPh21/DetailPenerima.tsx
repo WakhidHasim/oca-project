@@ -7,7 +7,7 @@ import SearchBar from '../../components/Search/SearchBar';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { FaPlus } from 'react-icons/fa6';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -18,7 +18,7 @@ import { toast } from 'react-toastify';
 interface ApiData {
   id: string;
   kodeKegiatanOP: string;
-  kodeWPOP: string;
+  kodeWajibPajakOrangPribadi: string;
   statusPegawai: string;
   npwp?: string;
   lapisan?: number;
@@ -36,14 +36,15 @@ interface ApiData {
 }
 
 interface WajibPajakOrangPribadi {
-  kodeWPOP: string;
+  kodeWajibPajakOrangPribadi: string;
   nama: string;
   email: string;
+  password?: string;
   kewarganegaraan: string;
   namaNegara: string;
   idOrangPribadi: string;
   namaIdentitas: string;
-  masaBerlakuPassport?: Date;
+  masaBerlakuPassport?: string;
   npwp?: string;
   namaNpwp?: string;
   kotaNpwp?: string;
@@ -56,24 +57,31 @@ interface WajibPajakOrangPribadi {
   fileFotoIdOrangPribadi: string;
   fileFotoBuktiRekening?: string;
   isApproved: boolean;
+  tanggalInput?: string;
 }
 
 const DetailPenerima: React.FC = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const kodeKegiatanOP = location?.state?.kodeKegiatanOP || '';
+
+  console.log(kodeKegiatanOP);
 
   const [apiData, setApiData] = useState<ApiData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const [namaWPOP, setNamaWPOP] = useState<WajibPajakOrangPribadi[]>([]);
 
-  const mapNamaWPOP = (kodeWPOP: string) => {
-    const wpop = namaWPOP.find((wpop) => wpop.kodeWPOP === kodeWPOP);
-    return wpop ? wpop.nama : 'Nama Badan Not Found';
+  const mapNamaWPOP = (kodeWajibPajakOrangPribadi: string) => {
+    const wpop = namaWPOP.find(
+      (wpop) => wpop.kodeWajibPajakOrangPribadi === kodeWajibPajakOrangPribadi
+    );
+    return wpop ? wpop.nama : 'Nama WPOP Not Found';
   };
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/pph21');
+      const response = await fetch('/api/pph21');
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -95,7 +103,7 @@ const DetailPenerima: React.FC = () => {
   useEffect(() => {
     fetchData();
 
-    fetch('http://localhost:3000/api/wpop')
+    fetch('/api/wpop')
       .then((response) => response.json())
       .then(
         (data: {
@@ -162,6 +170,10 @@ const DetailPenerima: React.FC = () => {
     return formattedAmount;
   };
 
+  const handleTambahPenerima = (kodeKegiatanOP: string) => {
+    navigate(`/tambahPenerima21`, { state: { kodeKegiatanOP } });
+  };
+
   const ActionsButtons: React.FC<{ id: string }> = ({ id }) => (
     <div className='flex space-x-2 items-center text-white'>
       <Link to='/editPenerima21'>
@@ -224,13 +236,12 @@ const DetailPenerima: React.FC = () => {
           <div className='w-full mx-auto p-5 rounded'>
             <div className='flex flex-col md:flex-row py-3 justify-between'>
               <div className='flex md:flex-row flex-col items-center ml-5'>
-                <Link to='/tambahPenerima21'>
-                  <ButtonTabel
-                    text='Tambah Data'
-                    icon={<FaPlus size={16} />}
-                    bgColor='bg-tambah-data'
-                  />
-                </Link>
+                <ButtonTabel
+                  onClick={() => handleTambahPenerima(kodeKegiatanOP)}
+                  text='Tambah Data'
+                  icon={<FaPlus size={16} />}
+                  bgColor='bg-tambah-data'
+                />
               </div>
               <div className='flex md:flex-row flex-col items-center mr-5'>
                 <div className='flex justify-end'>
@@ -246,7 +257,7 @@ const DetailPenerima: React.FC = () => {
                 columns={columns}
                 data={apiData.map((item, index) => ({
                   id: index + 1,
-                  col1: mapNamaWPOP(item.kodeWPOP),
+                  col1: mapNamaWPOP(item.kodeWajibPajakOrangPribadi),
                   col2: item.statusPegawai,
                   col3: formatCurrency(item.penghasilanBruto),
                   col4: formatCurrency(item.potonganPajak),

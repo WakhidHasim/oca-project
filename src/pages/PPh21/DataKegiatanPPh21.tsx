@@ -8,8 +8,8 @@ import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { TbListDetails } from 'react-icons/tb';
 import { FaPlus } from 'react-icons/fa6';
-import { formatIndonesianDate } from '../../utils/FormatIndonesianDate';
-import { formatRupiah } from '../../utils/FormatRupiah';
+import { indonesianDate } from '../../utils/FormatIndonesianDate';
+import { currencyRupiah } from '../../utils/FormatRupiah';
 
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -152,6 +152,10 @@ const DataKegiatanPPh21: React.FC = () => {
     });
   };
 
+  const handleAddPenerima = (kodeKegiatanBadan: string) => {
+    navigate(`/detailPenerima21`, { state: { kodeKegiatanBadan } });
+  };
+
   const handleEditClick = (kodeKegiatanOP: string) => {
     navigate(`/dataKegiatan21/editKegiatan21`, { state: { kodeKegiatanOP } });
   };
@@ -160,21 +164,18 @@ const DataKegiatanPPh21: React.FC = () => {
     kodeKegiatanOP,
   }) => (
     <div className='flex space-x-2 items-center text-white'>
-      <Link to='/detailPenerima21'>
-        <ButtonTabel
-          text='Penerima'
-          icon={<TbListDetails size={16} />}
-          onClick={() => handleEditClick(kodeKegiatanOP)}
-          bgColor='bg-detail'
-        />
-      </Link>
-      <Link to='/dataKegiatan21/editKegiatan21'>
-        <ButtonTabel
-          text='Edit'
-          icon={<FaEdit size={16} />}
-          bgColor='bg-orange'
-        />
-      </Link>
+      <ButtonTabel
+        text='Penerima'
+        icon={<TbListDetails size={16} />}
+        onClick={() => handleAddPenerima(kodeKegiatanOP)}
+        bgColor='bg-detail'
+      />
+      <ButtonTabel
+        text='Edit'
+        icon={<FaEdit size={16} />}
+        onClick={() => handleEditClick(kodeKegiatanOP)}
+        bgColor='bg-orange'
+      />
       <Link to=''>
         <ButtonTabel
           text='Hapus'
@@ -239,11 +240,11 @@ const DataKegiatanPPh21: React.FC = () => {
                 columns={columns}
                 data={apiData.map((item, index) => ({
                   id: index + 1,
-                  col1: formatIndonesianDate(item.tanggalInput),
+                  col1: indonesianDate(item.tanggalInput),
                   col2: item.uraianKegiatan,
                   col3: noPengajuan(item.idKegiatanAnggaran),
-                  col4: formatRupiah(item.totalPotonganPajak),
-                  col5: formatRupiah(item.totalPenghasilanBruto),
+                  col4: currencyRupiah(item.totalPotonganPajak),
+                  col5: currencyRupiah(item.totalPenghasilanBruto),
                   col6: <ActionsButtons kodeKegiatanOP={item.kodeKegiatanOP} />,
                 }))}
               />

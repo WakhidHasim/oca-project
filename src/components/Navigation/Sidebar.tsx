@@ -110,19 +110,21 @@ const Sidebar: React.FC = () => {
             </div>
           </Link>
 
-          <Link to='/dataKegiatan21'>
+          <Link to='/data-kegiatan-pph-21'>
             <div
               className={`w-full flex gap-4 items-center h-10 px-8 ${
-                selectedMenu?.includes('/dataKegiatan21')
+                selectedMenu?.includes('/data-kegiatan-pph-21')
                   ? 'bg-purple text-white shadow-lg'
                   : 'hover:bg-gray-30'
               } cursor-pointer  `}
-              onClick={() => handleMenuClick('/dataKegiatan21')}
+              onClick={() => handleMenuClick('/data-kegiatan-pph-21')}
             >
               <FaDatabase size={16} />
               <span
                 className={` pl-2 text-xs md:text-sm ${
-                  selectedMenu?.includes('/dataKegiatan21') ? 'text-white' : ''
+                  selectedMenu?.includes('/data-kegiatan-pph-21')
+                    ? 'text-white'
+                    : ''
                 }`}
               >
                 PPh 21

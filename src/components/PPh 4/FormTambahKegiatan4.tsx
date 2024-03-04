@@ -6,7 +6,7 @@ import { IoArrowUndoSharp } from 'react-icons/io5';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ButtonTabel from '../Button/ButtonTabel';
-import { formatRupiah } from '../../utils/FormatRupiah';
+import { currencyRupiah } from '../../utils/FormatRupiah';
 
 type SelectedBadanUsaha = {
   value: string;
@@ -612,7 +612,7 @@ const FormTambahKegaiatn4: React.FC = () => {
           </label>
           <input
             type='text'
-            value={formatRupiah(potonganPajak)}
+            value={currencyRupiah(potonganPajak)}
             disabled
             className='w-full p-2 border rounded-md mt-2 disabled:bg-gray-200 text-sm'
           />
@@ -624,7 +624,7 @@ const FormTambahKegaiatn4: React.FC = () => {
           </label>
           <input
             type='text'
-            value={formatRupiah(penghasilanDiterima)}
+            value={currencyRupiah(penghasilanDiterima)}
             disabled
             className='w-full p-2 border rounded-md mt-2 text-sm disabled:bg-gray-200'
           />

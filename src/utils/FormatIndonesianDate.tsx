@@ -1,4 +1,4 @@
-export const formatIndonesianDate = (dateString: string) => {
+export const indonesianDate = (dateString: string) => {
   const options: Intl.DateTimeFormatOptions = {
     day: 'numeric',
     month: 'long',

@@ -8,8 +8,8 @@ import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { FaPlus } from 'react-icons/fa6';
 import { Link, useNavigate } from 'react-router-dom';
-import { formatIndonesianDate } from '../../utils/FormatIndonesianDate';
-import { formatRupiah } from '../../utils/FormatRupiah';
+import { indonesianDate } from '../../utils/FormatIndonesianDate';
+import { currencyRupiah } from '../../utils/FormatRupiah';
 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -238,10 +238,10 @@ const DataKegiatanPPh4: React.FC = () => {
                 columns={columns}
                 data={apiData.map((item, index) => ({
                   id: index + 1,
-                  col1: formatIndonesianDate(item.tanggalInput),
+                  col1: indonesianDate(item.tanggalInput),
                   col2: item.uraianKegiatan,
                   col3: mapNamaBadan(item.kodeWPBadan),
-                  col4: formatRupiah(item.penghasilanBruto),
+                  col4: currencyRupiah(item.penghasilanBruto),
                   col5: (
                     <ActionsButtons
                       kodeKegiatanBadan={item.kodeKegiatanBadan}

@@ -94,7 +94,7 @@ function App(): JSX.Element {
         />
 
         <Route
-          path='/dataKegiatan21'
+          path='/data-kegiatan-pph-21'
           element={
             <Layout>
               <DataKegiatanPPh21 />
